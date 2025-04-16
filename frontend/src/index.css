@@ -1,5 +1,5 @@
 @import "tailwindcss";
 @plugin "daisyui";
-@plugin "@tailwindcss/aspect-ratio";
-@plugin "@tailwindcss/forms"
+/* @plugin "@tailwindcss/aspect-ratio"; */
+/* @plugin "@tailwindcss/forms" */
 
