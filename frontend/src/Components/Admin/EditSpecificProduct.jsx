@@ -19,7 +19,6 @@ function EditSpecificProduct() {
     const product = useSelector((state) => state.productDetails.productInfo);
 
     const onSubmit= async (data) => {
-        console.log("data", data)
         await dispatch(EditSpecificProductApi({ id, updatedData: data }))
         navigate(`/shopnow/productDetail/${id}`)
     }

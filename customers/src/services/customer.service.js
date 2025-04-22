@@ -1,6 +1,8 @@
 import userCrudOperation from "../database/repository/user.repository.js";
 import ApiError from "../utils/ApiError.js";
 import bcrypt from "bcryptjs";
+import admin from "../utils/FirebaseConfig.js";
+import prisma from "../database/Connection.js";
 
 class customerServices {
   constructor() {
@@ -30,6 +32,32 @@ class customerServices {
         verifyOTPExpiryAt,
       });
       return registerUser;
+    } catch (error) {
+      throw new ApiError(500, "Data not found", error);
+    }
+  }
+
+  async registerWithGoogle(token) {
+    try {
+      const decoded = await admin.auth().verifyIdToken(token);
+      const isUserExist = await this.repository.findUser(decoded?.email);
+
+      if (isUserExist) {
+        throw new ApiError(
+          401,
+          "User already exist...",
+          "User already exist..."
+        );
+      }
+
+      const regRes = this.repository.registerUserUsingGoogle({
+        name: decoded?.name,
+        profilePic: decoded?.picture,
+        email: decoded?.email,
+        firebaseUid: decoded?.user_id,
+      });
+
+      return regRes;
     } catch (error) {
       throw new ApiError(500, "Data not found", error);
     }
@@ -68,7 +96,6 @@ class customerServices {
       }
 
       await this.repository.updateIsAccountVerified(id);
-
     } catch (error) {
       throw new ApiError(500, "Invalid OTP...", error);
     }
@@ -90,19 +117,64 @@ class customerServices {
         password,
         isUserExist?.password
       );
-      console.log("isValidPassword :", isValidPassword);
 
-      if(!isValidPassword){
-        throw new ApiError(403,"Invalid Credentials...","Invalid Credentials...");
+      if (!isValidPassword) {
+        throw new ApiError(
+          403,
+          "Invalid Credentials...",
+          "Invalid Credentials..."
+        );
       }
 
-      const {accessToken, refreshToken}=await this.repository.serverCookieGenerator(isUserExist?.id,email,isUserExist?.role);
+      const { accessToken, refreshToken } =
+        await this.repository.serverCookieGenerator(
+          isUserExist?.id,
+          email,
+          isUserExist?.role
+        );
 
-      return {accessToken, refreshToken};
+      return { accessToken, refreshToken };
     } catch (error) {
       throw new ApiError(500, "Login error..", error);
     }
   }
+
+  async loginWithGoogle(userInput) {
+    try {
+      const decoded=await admin.auth().verifyIdToken(userInput);
+      
+      if (!decoded?.email  || !decoded?.uid) {
+        throw new ApiError(
+          401,
+          "Credentials required...",
+          "Credentials required..."
+        );
+      }
+      
+      const isUserExist = await this.repository.findUser(decoded?.email);
+
+      if (!isUserExist) {
+        throw new ApiError(
+          404,
+          "User doesn't exist...",
+          "User doesn't exist..."
+        );
+      }
+
+      const { accessToken, refreshToken } =
+        await this.repository.serverCookieGenerator(
+          isUserExist?.id,
+          decoded?.email,
+          isUserExist?.role
+        );
+
+      return { accessToken, refreshToken };
+    } catch (error) {
+      throw new ApiError(500, "Login with google error..", error);
+    }
+  }
+
+
 }
 
 export default customerServices;

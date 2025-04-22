@@ -24,6 +24,28 @@ class userCrudOperation {
     }
   }
 
+  async registerUserUsingGoogle(userInputs) {
+    try {
+      const { name, profilePic, email, firebaseUid } = userInputs;
+      const regRes = await prisma.auth.create({
+        data: {
+          name,
+          profilePic,
+          email,
+          firebaseUid,
+          registeredWith: "GOOGLE",
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      return regRes;
+    } catch (error) {
+      throw new ApiError(500, "user record insertion error...", error);
+    }
+  }
+
   //find customer
   async findUser(email) {
     try {
@@ -33,6 +55,7 @@ class userCrudOperation {
         },
         select: {
           id: true,
+          role: true,
         },
       });
       return existingUser;

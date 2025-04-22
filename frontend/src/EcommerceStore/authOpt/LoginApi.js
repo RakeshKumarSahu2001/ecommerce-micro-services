@@ -1,68 +1,102 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import axiosInstance from "../../AxiosConfig";
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { app } from "../../firebase.js";
 
-
-export const loginApi = createAsyncThunk("user/loginUser", async (data, { rejectWithValue }) => {
+export const loginApi = createAsyncThunk(
+  "user/loginUser",
+  async (data, { rejectWithValue }) => {
     try {
-        const response = await axios.post(`/api/v1/users/login`, data)
+      const response = await axiosInstance.post(`/customer/v1/login`, data, {
+        withCredentials: true,
+      });
 
-        const userData= {
-            id: response.data.data.id,
-            email: response.data.data.email,
-            Role:response.data.data.Role
-        }
-        if (response.data) {
-            return userData;
-        } else {
-            return rejectWithValue("User doesn't exist")
-        }
+      const userData = {
+        id: response.data.data.id,
+        email: response.data.data.email,
+        Role: response.data.data.Role,
+      };
+      if (response.data) {
+        return userData;
+      } else {
+        return rejectWithValue("User doesn't exist");
+      }
     } catch (err) {
-        throw (err);
+      throw err;
     }
-})
+  }
+);
 
+export const loginWithGoogle = createAsyncThunk(
+  "user/loginUserWithGoogle",
+  async (_, { rejectWithValue }) => {
+    try {
+      const auth = getAuth(app);
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      const token = await user.getIdToken();
+
+      const response = await axiosInstance.post(
+        "/customer/v1/login-with-google",
+        token,
+        {
+          withCredentials: true,
+        }
+      );
+      return response.data.data;
+    } catch (error) {
+      rejectWithValue(error);
+    }
+  }
+);
 
 export const logoutApi = createAsyncThunk("user/logoutUser", async () => {
-    try {
-        await axios.post("/api/v1/users/logout")
-        return true
-    } catch (error) {
-        throw error
-    }
-})
+  try {
+    await axiosInstance.post("/api/v1/users/logout");
+    return true;
+  } catch (error) {
+    throw error;
+  }
+});
 
-
-const initialState= {
-    isUserExist: false,
-    loggedInUser: null
-}
+const initialState = {
+  isUserExist: false,
+  loggedInUser: null,
+};
 
 export const loginSlice = createSlice({
-    name: "loginSlice",
-    initialState,
-    reducers: {
-        clearLoginUserInfoFromLocalStorage:()=>{
-             sessionStorage.clear()
-        }
+  name: "loginSlice",
+  initialState,
+  reducers: {
+    clearLoginUserInfoFromLocalStorage: () => {
+      sessionStorage.clear();
     },
-    extraReducers: (builder) => {
-        builder.addCase(loginApi.fulfilled, (state, action) => {
-            state.isUserExist = true;
-            state.loggedInUser = action.payload;
-            sessionStorage.setItem("Id", action.payload.id);
-            sessionStorage.setItem("Email", action.payload.email);
-            sessionStorage.setItem("Role", action.payload.Role);
-        })
-        builder.addCase(loginApi.rejected, (state) => {
-            state.isUserExist = false
-        })
-        builder.addCase(logoutApi.fulfilled, (state) => {
-            state.isUserExist = false
-            state.loggedInUser = null
-            sessionStorage.removeItem("loginUserInfo")
-        })
-        builder.addCase(logoutApi.rejected, () => {
-            console.log("Logout failed");
-        });
-    }
-})
+  },
+  extraReducers: (builder) => {
+    builder.addCase(loginApi.fulfilled, (state, action) => {
+      state.isUserExist = true;
+      state.loggedInUser = action.payload;
+      sessionStorage.setItem("Id", action.payload.id);
+      sessionStorage.setItem("Email", action.payload.email);
+      sessionStorage.setItem("Role", action.payload.Role);
+    });
+    builder.addCase(loginApi.rejected, (state) => {
+      state.isUserExist = false;
+    });
+
+    builder.addCase(loginWithGoogle.fulfilled,(state,action)=>{
+      state.isUserExist=true;
+      state.loggedInUser=action.payload;
+    })
+
+    builder.addCase(logoutApi.fulfilled, (state) => {
+      state.isUserExist = false;
+      state.loggedInUser = null;
+      sessionStorage.removeItem("loginUserInfo");
+    });
+    builder.addCase(logoutApi.rejected, () => {
+      console.log("Logout failed");
+    });
+  },
+});

@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm} from "react-hook-form";
 import { useEffect } from 'react';
 import logo from "../../assets/images/logo.png"
-import { loginApi } from '../../EcommerceStore/authOpt/LoginApi';
+import { loginApi, loginWithGoogle } from '../../EcommerceStore/authOpt/LoginApi';
 import { useDispatch, useSelector } from 'react-redux';
 
 
@@ -17,6 +17,10 @@ function Login() {
   const onSubmit = async ({ email, password }) => {
     await dispatch(loginApi({ email: email, password: password }));
     reset();
+  }
+
+  const handleLoginWithGoogle=async()=>{
+    await dispatch(loginWithGoogle());
   }
 
   useEffect(() => {
@@ -120,6 +124,15 @@ function Login() {
             </button>
           </div>
         </form>
+<br />
+        <div>
+            <button
+              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              onClick={handleLoginWithGoogle}
+            >
+              Login With Google
+            </button>
+          </div>
 
         <p className="mt-10 text-center text-sm text-gray-500">
           Not a member?{' '}

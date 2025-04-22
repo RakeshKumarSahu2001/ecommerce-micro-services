@@ -19,6 +19,12 @@ enum Role {
   USER
 }
 
+enum Register {
+  GOOGLE
+  EMAIL
+  GITHUB
+}
+
 enum Gender {
   Male
   Female
@@ -27,7 +33,11 @@ enum Gender {
 
 model Auth {
   id                String    @id @unique @default(uuid())
+  firebaseUid       String?   @unique
   name              String?
+  email             String    @unique
+  password          String?
+  profilePic        String?
   phone             String?
   street            String?
   city              String?
@@ -36,13 +46,12 @@ model Auth {
   postalCode        String?
   dateOfBirth       DateTime?
   gender            Gender?
-  email             String    @unique
-  password          String
   refreshToken      String?
   verifyOTP         Int?
   verifyOTPExpireAt DateTime?
   isAccountVerified Boolean   @default(false)
   role              Role      @default(USER)
+  registeredWith    Register  @default(EMAIL)
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 }

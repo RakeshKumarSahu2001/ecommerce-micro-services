@@ -6,7 +6,10 @@ import ApiError from "./utils/ApiError.js";
 export default async(app)=>{
     app.use(express.json());
     app.use(express.urlencoded());
-    app.use(cors());
+    app.use(cors({
+        origin:"http://localhost:5173",
+        credentials:true
+    }));
 
     user(app);
 
