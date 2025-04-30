@@ -1,5 +1,139 @@
-export default async(app)=>{
-    app.get("/",(req,res)=>{
-        res.send("hello from products");
-    })
-}
+import { upload } from "../middlewares/multer.middleware.js";
+import ProductServices from "../services/product.service.js";
+import ApiError from "../utils/ApiError.js";
+
+export default async (app) => {
+  const productServices = new ProductServices();
+
+  //get all products
+  app.get("/v1/get-all-product", async (req, res, next) => {
+    try {
+      const products = await productServices.getAllProduct();
+
+      res.status(200).json({
+        success: true,
+        message: "All product record fetched successfully.",
+        data: products,
+      });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  //select specific product
+  app.get("/v1/get-product/:id", async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const product = await productServices.getProduct(id);
+
+      res.status(200).json({
+        success: true,
+        message: "Product information fetched successfully...",
+        data: product,
+      });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  //insert new product
+  app.post(
+    "/v1/add-new-product",
+    upload.fields([
+      {
+        name: "thumbNailImage",
+        maxCount: 1,
+      },
+      {
+        name: "images",
+        maxCount: 3,
+      },
+    ]),
+    async (req, res, next) => {
+      try {
+        const {
+          productName,
+          rating,
+          price,
+          discount,
+          stockQuantity,
+          brand,
+          category,
+          description,
+        } = req.body;
+
+        const thumbNailImageLocation = req.files?.thumbNailImage[0]?.path;
+        const imagesLocation = req.files?.images?.map((img) => img.path);
+
+        if (
+          !productName ||
+          !rating ||
+          !price ||
+          !discount ||
+          !stockQuantity ||
+          !brand ||
+          !category ||
+          !description ||
+          !thumbNailImageLocation ||
+          !imagesLocation
+        ) {
+          throw new ApiError(
+            404,
+            "Missing product information...",
+            "Missing product information..."
+          );
+        }
+
+        const insertedNewProduct = await productServices.addNewProduct({
+          productName,
+          rating,
+          price,
+          discount,
+          stockQuantity,
+          brand,
+          category,
+          description,
+          thumbNailImageLocation,
+          imagesLocation,
+        });
+
+        res.status(201).json({
+          success: true,
+          message: "New Product added successfully.",
+          data: insertedNewProduct,
+        });
+      } catch (error) {
+        next(error);
+      }
+    }
+  );
+
+  //update specific product information
+  app.put("/v1/update-product/:id", async (req, res, next) => {
+    try {
+      res.status(200).json({
+        success: true,
+        message: "Produxt information updated successfully.",
+        data: [],
+      });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  //delete specific product
+  app.delete("/v1/delete-product/:id", async (req, res, next) => {
+    try {
+      const {id}=req.params;
+      const isDeleted =await productServices.deleteProduct(id);
+
+      res.status(200).json({
+        success: true,
+        message: "Product deleted successfully.",
+        data: [],
+      });
+    } catch (error) {
+      next(error);
+    }
+  });
+};

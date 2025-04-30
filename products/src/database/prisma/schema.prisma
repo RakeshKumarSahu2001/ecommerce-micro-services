@@ -13,14 +13,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Products {
+model Goods {
   id             String   @id @unique @default(uuid())
   productName    String
   description    String
-  rating         Decimal
-  price          Decimal
+  rating         Decimal  @db.Decimal(9, 2)
+  price          Decimal  @db.Decimal(9, 2)
   category       String
-  discount       Decimal
+  discount       Decimal  @db.Decimal(9, 2)
   stockQuantity  Int
   brand          String
   thumbnailImage String?

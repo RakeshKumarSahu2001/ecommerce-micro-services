@@ -1,5 +1,5 @@
 import express from "express";
-import * as dotenv from "dotenv";
+import dotenv from "dotenv";
 import prisma from "./src/database/Connection.js";
 dotenv.config({ path: "./.env" });
 import expressApp from "./src/app.js";
