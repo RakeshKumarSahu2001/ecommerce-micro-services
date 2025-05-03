@@ -1,10 +1,3 @@
-// import { configureStore } from '@reduxjs/toolkit'
-
-// export const ecommerceStore = configureStore({
-//   reducer: {},
-// })
-
-
 import { configureStore } from "@reduxjs/toolkit";
 import { ProductSlice } from "./productsOpt/ProductApi";
 import { ProductDetailsSlice } from "./productsOpt/FetchProductDetailsApi";
@@ -21,42 +14,38 @@ import { deleteCartProductSlice } from "./cartOpt/DeleteCartProduct";
 import { EmailValidationSlice } from "./authOpt/EmailValidationApi";
 import { SendResetPasswordOtpSlice } from "./authOpt/SendResetPasswordOtpApi";
 import { VerifyResetOtpSlice } from "./authOpt/VerifyResetOtpApi";
-import { FetchCategorySlice } from "./productsOpt/FetchCategoryApi";
-import { FetchProductBrandSlice } from "./productsOpt/FetchProductBrandApi";
+import { FetchProductFilterPropsSlice } from "./productsOpt/FetchProductFilterPropsApi";
 import { FetchProductByFilterSlice } from "./productsOpt/FetchProductByFilterApi";
 
 const ecommerceStore = configureStore({
-    reducer: {
-        //product
-        products: ProductSlice.reducer,
-        productDetails: ProductDetailsSlice.reducer,
-        FetchCategorySlice:FetchCategorySlice.reducer,
-        FetchProductBrandSlice:FetchProductBrandSlice.reducer,
-        FetchProductByFilterSlice:FetchProductByFilterSlice.reducer,
+  reducer: {
+    //product
+    products: ProductSlice.reducer,
+    productDetails: ProductDetailsSlice.reducer,
+    FetchProductFilterPropsSlice: FetchProductFilterPropsSlice.reducer,
+    FetchProductByFilterSlice: FetchProductByFilterSlice.reducer,
 
-        //login & signup
-        createNewUser: createNewUserSlice.reducer,
-        loginSlice: loginSlice.reducer,
-        EmailValidationSlice:EmailValidationSlice.reducer,
-        SendResetPasswordOtpSlice:SendResetPasswordOtpSlice.reducer,
-        VerifyResetOtpSlice:VerifyResetOtpSlice.reducer,
-        
-        
-        //cart
-        addProductsToCart: addToCartSlice.reducer,
-        userCartProducts: useraddToCartSlice.reducer,
-        deleteCartProductSlice:deleteCartProductSlice.reducer,
+    //login & signup
+    createNewUser: createNewUserSlice.reducer,
+    loginSlice: loginSlice.reducer,
+    EmailValidationSlice: EmailValidationSlice.reducer,
+    SendResetPasswordOtpSlice: SendResetPasswordOtpSlice.reducer,
+    VerifyResetOtpSlice: VerifyResetOtpSlice.reducer,
 
-        //admin
-        addNewProductsInTheWeb: createNewAddProductSlice.reducer,
-        deleteProductSlice:deleteProductSlice.reducer,
-        EditSpecificProductSlice:EditSpecificProductSlice.reducer,
+    //cart
+    addProductsToCart: addToCartSlice.reducer,
+    userCartProducts: useraddToCartSlice.reducer,
+    deleteCartProductSlice: deleteCartProductSlice.reducer,
 
-        //user
-        FetchUserProfInfoSlice:FetchUserProfInfoSlice.reducer,
-        manageUserProfInfoSlice:manageUserProfInfoSlice.reducer
-    }
+    //admin
+    addNewProductsInTheWeb: createNewAddProductSlice.reducer,
+    deleteProductSlice: deleteProductSlice.reducer,
+    EditSpecificProductSlice: EditSpecificProductSlice.reducer,
+
+    //user
+    FetchUserProfInfoSlice: FetchUserProfInfoSlice.reducer,
+    manageUserProfInfoSlice: manageUserProfInfoSlice.reducer,
+  },
 });
-
 
 export default ecommerceStore;

@@ -111,10 +111,52 @@ export default async (app) => {
   //update specific product information
   app.put("/v1/update-product/:id", async (req, res, next) => {
     try {
+      const { id } = req.params;
+      const {
+        productName,
+        rating,
+        price,
+        discount,
+        stockQuantity,
+        brand,
+        category,
+        description,
+      } = req.body;
+
+      if (
+        !id ||
+        !productName ||
+        !rating ||
+        !price ||
+        !discount ||
+        !stockQuantity ||
+        !brand ||
+        !category ||
+        !description
+      ) {
+        throw new ApiError(
+          404,
+          "Missing product information...",
+          "Missing product information..."
+        );
+      }
+
+      const updatedProduct = await productServices.updateProduct({
+        id,
+        productName,
+        rating,
+        price,
+        discount,
+        stockQuantity,
+        brand,
+        category,
+        description,
+      });
+
       res.status(200).json({
         success: true,
         message: "Produxt information updated successfully.",
-        data: [],
+        data: updatedProduct,
       });
     } catch (error) {
       next(error);
@@ -124,16 +166,30 @@ export default async (app) => {
   //delete specific product
   app.delete("/v1/delete-product/:id", async (req, res, next) => {
     try {
-      const {id}=req.params;
-      const isDeleted =await productServices.deleteProduct(id);
+      const { id } = req.params;
+      const isDeleted = await productServices.deleteProduct(id);
 
       res.status(200).json({
         success: true,
         message: "Product deleted successfully.",
-        data: [],
+        data: isDeleted,
       });
     } catch (error) {
       next(error);
     }
   });
+
+  app.get("/v1/filter-props",async(req,res,next)=>{
+    try {
+      const brands=await productServices.getFilterProperties();
+
+      res.status(200).json({
+        success:true,
+        message:"Brand information fetched successfully from the db...",
+        data:brands
+      })
+    } catch (error) {
+      next(error);
+    }
+  })
 };

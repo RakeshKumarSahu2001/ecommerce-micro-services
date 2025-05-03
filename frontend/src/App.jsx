@@ -23,7 +23,7 @@ function App() {
       <Route path="/" element={<HomePage />}>
         <Route index element={<HomeCarousel />} />
         <Route path="shopnow/allproduct" element={<ProductsPage />} />
-        <Route path="shopnow/error" element={<ErrorPage />} />
+        {/* <Route path="shopnow/error" element={<ErrorPage />} /> */}
         <Route path="shopnow/productDetail/:id" element={<ProductDetailsPage />} />
         <Route path="shopnow/user-info/:id" element={<UserInfoPage />} />
         <Route path="shopnow/edit-user-profile/:id" element={<UserProfEdit />} />

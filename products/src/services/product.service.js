@@ -19,7 +19,7 @@ class ProductServices {
   async getAllProduct() {
     try {
       const products = await this.repository.getProducts();
-      console.log("products :", products);
+
       return products;
     } catch (error) {
       throw new ApiError(404, "Products record not found...", error);
@@ -37,9 +37,8 @@ class ProductServices {
 
   async deleteProduct(id) {
     try {
-      const isDeleted = this.repository.deleteProduct(id);
+      const isDeleted = await this.repository.deleteProduct(id);
 
-      console.log("is deleted :", isDeleted);
       return isDeleted;
     } catch (error) {
       throw new ApiError(
@@ -47,6 +46,44 @@ class ProductServices {
         "The id of the product is required to delete it...",
         error
       );
+    }
+  }
+
+  async updateProduct(userInput) {
+    try {
+      const { id } = userInput;
+
+      const isProductExist = await this.repository.getProduct(id);
+
+      if (!isProductExist) {
+        throw new ApiError(
+          404,
+          "Product doesn't exist in the DB...",
+          "Product doesn't exist in the DB..."
+        );
+      }
+
+      const updatedProduct = await this.repository.updateProduct(userInput);
+
+      return updatedProduct;
+    } catch (error) {
+      throw new ApiError(404, "Product Information not found...", error);
+    }
+  }
+
+  async getFilterProperties() {
+    try {
+      const brands = await this.repository.getFilterProperties();
+      if (!brands) {
+        throw new ApiError(
+          404,
+          "got error while fetching the brands records from the db...",
+          "got error while fetching the brands records from the db..."
+        );
+      }
+      return brands;
+    } catch (error) {
+      throw new ApiError();
     }
   }
 }

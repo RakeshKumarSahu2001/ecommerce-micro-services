@@ -1,18 +1,31 @@
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
-import { EllipsisVerticalIcon, StarIcon } from '@heroicons/react/24/outline'
-import { Link } from 'react-router-dom'
-import isAdmin from '../../Hooks/isAdmin';
+import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import { EllipsisVerticalIcon, StarIcon } from "@heroicons/react/24/outline";
+import { Link } from "react-router-dom";
+import isAdmin from "../../Hooks/isAdmin";
 
-
-function ProductCard({ ProductID, ProductName, ThumbnailImage, Rating, Price, Discount, handleDeleteProduct }) {
+function ProductCard({
+  ProductID,
+  ProductName,
+  ThumbnailImage,
+  Rating,
+  Price,
+  Discount,
+  handleDeleteProduct,
+}) {
   const isAdminObj = new isAdmin();
   return (
-    <div key={ProductID} className="group relative border-solid border-2 min-h-[21.5rem] border-r-gray-200 rounded-md p-2">
-      {isAdminObj.access &&
+    <div
+      key={ProductID}
+      className="group relative border-solid border-2 min-h-[21.5rem] border-r-gray-200 rounded-md p-2"
+    >
+      {isAdminObj.access && (
         <Menu as="div" className="absolute z-20 h-8 right-1">
           <div>
             <MenuButton className="relative w-[100%] h-8 gap-x-1.5 rounded-md px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm">
-              <EllipsisVerticalIcon aria-hidden="true" className="absolute z-20 h-8 top-0 right-0" />
+              <EllipsisVerticalIcon
+                aria-hidden="true"
+                className="absolute z-20 h-8 top-0 right-0"
+              />
             </MenuButton>
           </div>
 
@@ -43,8 +56,7 @@ function ProductCard({ ProductID, ProductName, ThumbnailImage, Rating, Price, Di
             </div>
           </MenuItems>
         </Menu>
-      }
-
+      )}
 
       <div className=" min-h-60 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-72">
         <img
@@ -56,16 +68,17 @@ function ProductCard({ ProductID, ProductName, ThumbnailImage, Rating, Price, Di
       <div className="mt-4 flex justify-between">
         <div>
           <h3 className="text-sm text-gray-700">
-            <a href={ThumbnailImage}>
-              <span
-                aria-hidden="true"
-                className="absolute inset-0 text-xs md:text-base"
-              />
-              {ProductName}
-            </a>
+            {/* <a href={ThumbnailImage}> */}
+            <span
+              aria-hidden="true"
+              className="absolute inset-0 text-xs md:text-base"
+            />
+            {ProductName}
+            {/* </a> */}
           </h3>
           <p className="mt-1 text-sm text-gray-500 flex">
-            <StarIcon className="w-5 h-5 inline" /><span className="px-2 align-bottom">{Rating}</span>
+            <StarIcon className="w-5 h-5 inline" />
+            <span className="px-2 align-bottom">{Rating}</span>
           </p>
         </div>
         <div>
@@ -78,7 +91,7 @@ function ProductCard({ ProductID, ProductName, ThumbnailImage, Rating, Price, Di
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default ProductCard
+export default ProductCard;

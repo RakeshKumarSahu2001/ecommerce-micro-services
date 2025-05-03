@@ -110,6 +110,10 @@ class productCrudOperation {
         where: {
           id,
         },
+        select: {
+          id: true,
+          productName: true,
+        },
       });
 
       return isDeleted;
@@ -119,6 +123,57 @@ class productCrudOperation {
         "you cant delete the product because it doesn't exist...",
         error
       );
+    }
+  }
+
+  async updateProduct(userInput) {
+    try {
+      const {
+        id,
+        productName,
+        rating,
+        price,
+        discount,
+        stockQuantity,
+        brand,
+        category,
+        description,
+      } = userInput;
+
+      const updatedProduct = await prisma.goods.update({
+        where: {
+          id,
+        },
+        data: {
+          productName,
+          rating:new Prisma.Decimal(rating),
+          price:new Prisma.Decimal(price),
+          discount:new Prisma.Decimal(discount),
+          stockQuantity,
+          brand,
+          category,
+          description,
+        },
+      });
+
+      return updatedProduct;
+    } catch (error) {
+      throw new ApiError(404, "Product record updatation error...", error);
+    }
+  }
+
+  async getFilterProperties(){
+    try {
+      const brands=await prisma.goods.findMany({ distinct: ['brand',"category"],
+        select: {
+          brand: true,
+          category:true,
+        }
+      });
+
+      return brands;
+    } catch (error) {
+      throw new ApiError(404,"Error occured during fetching all the brands",error);
     }
   }
 }

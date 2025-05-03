@@ -1,107 +1,131 @@
 import { useEffect, useState } from "react";
-import { ProductApi, ProductSlice } from "../../EcommerceStore/productsOpt/ProductApi";
-import { useSelector, useDispatch  } from "react-redux";
+import {
+  ProductApi,
+  ProductSlice,
+} from "../../EcommerceStore/productsOpt/ProductApi";
+import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { DeleteSpecificProductApi } from "../../EcommerceStore/productsOpt/DeleteSpecificProductById";
 import ProductCard from "./ProductCard";
-import { Dialog, DialogBackdrop, DialogPanel, Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/react";
-import { FunnelIcon, MinusIcon, PlusIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { FetchCategoryApi } from "../../EcommerceStore/productsOpt/FetchCategoryApi";
-import { FetchProductBrandApi } from "../../EcommerceStore/productsOpt/FetchProductBrandApi";
+import {
+  Dialog,
+  DialogBackdrop,
+  DialogPanel,
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+} from "@headlessui/react";
+import {
+  FunnelIcon,
+  MinusIcon,
+  PlusIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
+import { FetchProductFilterPropsApi } from "../../EcommerceStore/productsOpt/FetchProductFilterPropsApi";
 import { FetchProductByFilterApi } from "../../EcommerceStore/productsOpt/FetchProductByFilterApi";
-
 
 export default function Product() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [filterBrand, setFilterBrand] = useState([]);
   const [filterCategory, setFilterCategory] = useState([]);
-  const [productList, setProductList] = useState(null)
+  const [productList, setProductList] = useState(null);
 
   const dispatch = useDispatch();
   const isLoading = useSelector((state) => state.products.loadingStatus);
-  const loadingError = useSelector(state => state.products.loadingError);
+  const loadingError = useSelector((state) => state.products.loadingError);
   const navigate = useNavigate();
-  const productCategories = useSelector((state) => state.FetchCategorySlice.productCategories);
-  const productBrands = useSelector((state) => state.FetchProductBrandSlice.productBrands);
 
+  const productFilters = useSelector(
+    (state) => state.FetchProductFilterPropsSlice.productFilterProps
+  );
+  const brands = [...new Set(productFilters?.map((product) => product.brand))];
+  const category = [
+    ...new Set(productFilters?.map((product) => product?.category)),
+  ];
   const filters = [
     {
       id: "Brand",
       name: "Brand",
-      options: productBrands?.map((brand) => {
+      options: brands?.map((brand) => {
         return {
-          label: brand?.Brand,
-          value: brand?.Brand,
-          checked: false
-        }
-      })
+          label: brand,
+          value: brand,
+          checked: false,
+        };
+      }),
     },
     {
       id: "Category",
       name: "Category",
-      options: productCategories?.map((category) => {
+      options: category?.map((category) => {
         return {
-          label: category?.Category,
-          value: category?.Category,
-          checked: false
-        }
-      })
-    }
+          label: category,
+          value: category,
+          checked: false,
+        };
+      }),
+    },
   ];
 
   const handleDeleteProduct = async (id) => {
-    await dispatch(DeleteSpecificProductApi(id))
-  }
+    await dispatch(DeleteSpecificProductApi(id));
+  };
 
-  const products = useSelector((state) => state.products.allProducts)
+  const products = useSelector((state) => state.products.allProducts);
 
   useEffect(() => {
-    dispatch(FetchCategoryApi());
-    dispatch(FetchProductBrandApi());
+    dispatch(FetchProductFilterPropsApi());
     dispatch(ProductApi());
-  }, [dispatch])
+  }, [dispatch]);
 
   useEffect(() => {
     if (products?.length) {
-      setProductList(products)
+      setProductList(products);
     }
-  }, [products])
+  }, [products]);
 
   useEffect(() => {
     if (loadingError) {
-      navigate("/shopnow/error")
-      dispatch(ProductSlice.actions.setToInitValue())
+      // navigate("/shopnow/error")
+      // dispatch(ProductSlice.actions.setToInitValue())
     }
-  }, [loadingError, navigate])
+  }, [loadingError, navigate]);
 
   const handleFilterOnchange = (value, filterName) => {
     if (filterName === "Brand") {
       setFilterBrand((prev) => {
-        return prev.includes(value) ? [...prev] : [...prev, value]
-      })
+        return prev.includes(value) ? [...prev] : [...prev, value];
+      });
     } else {
       setFilterCategory((prev) => {
-        return prev.includes(value) ? [...prev] : [...prev, value]
-      })
+        return prev.includes(value) ? [...prev] : [...prev, value];
+      });
     }
 
-    console.log("information", filterBrand, filterCategory)
-  }
+    console.log("information", filterBrand, filterCategory);
+  };
 
-  const filteredProducts = useSelector((state) => state.FetchProductByFilterSlice.allProducts);
+  const filteredProducts = useSelector(
+    (state) => state.FetchProductByFilterSlice.allProducts
+  );
   useEffect(() => {
     if (filterBrand.length || filterCategory.length) {
       const debounce = setTimeout(() => {
-        dispatch(FetchProductByFilterApi({ Brand: filterBrand, Category: filterCategory }))
-        setProductList(filteredProducts)
-      }, 3000)
-      return () => clearTimeout(debounce)
+        dispatch(
+          FetchProductByFilterApi({
+            Brand: filterBrand,
+            Category: filterCategory,
+          })
+        );
+        setProductList(filteredProducts);
+      }, 3000);
+      return () => clearTimeout(debounce);
     }
-  }, [filterBrand, filterCategory, dispatch])
+  }, [filterBrand, filterCategory, dispatch]);
 
   useEffect(() => {
-    setProductList(filteredProducts)
-  }, [filteredProducts])
+    setProductList(filteredProducts);
+  }, [filteredProducts]);
 
   return (
     <div className="bg-white">
@@ -169,7 +193,9 @@ export default function Product() {
                               id={`filter-mobile-${section.id}-${optionIdx}`}
                               name={`${section.id}[]`}
                               type="checkbox"
-                              onChange={() => handleFilterOnchange(option.value, section.name)}
+                              onChange={() =>
+                                handleFilterOnchange(option.value, section.name)
+                              }
                               className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                             />
                             <label
@@ -242,7 +268,9 @@ export default function Product() {
                               id={`filter-${section.id}-${optionIdx}`}
                               name={`${section.id}[]`}
                               type="checkbox"
-                              onChange={() => handleFilterOnchange(option.value, section.name)}
+                              onChange={() =>
+                                handleFilterOnchange(option.value, section.name)
+                              }
                               className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                             />
                             <label
@@ -275,20 +303,22 @@ export default function Product() {
                         </div>
                       ) : (
                         productList?.map((product) => (
-                          <Link to={`/shopnow/productDetail/${product?.ProductID}`} key={product?.ProductID}>
+                          <Link
+                            to={`/shopnow/productDetail/${product?.id}`}
+                            key={product?.id}
+                          >
                             <ProductCard
-                              ProductID={product?.ProductID}
-                              ProductName={String(product?.ProductName)}
-                              ThumbnailImage={product?.ThumbnailImage}
-                              Rating={Number(product?.Rating)}
-                              Price={Number(product?.Price)}
-                              Discount={Number(product?.Discount)}
+                              ProductID={product?.id}
+                              ProductName={String(product?.productName)}
+                              ThumbnailImage={product?.thumbnailImage}
+                              Rating={Number(product?.rating)}
+                              Price={Number(product?.price)}
+                              Discount={Number(product?.discount)}
                               handleDeleteProduct={handleDeleteProduct}
                             />
                           </Link>
                         ))
                       )}
-
                     </div>
                   </div>
                 </div>
