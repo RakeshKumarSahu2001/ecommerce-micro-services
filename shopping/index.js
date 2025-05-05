@@ -1,11 +1,22 @@
 import express from "express";
-import dotenv from "dotenv"
-dotenv.config({path:"./.env"});
+import dotenv from "dotenv";
+dotenv.config({ path: "./.env" });
+import prisma from "./src/database/Connection.js";
+import shopping from "./app.js"
 
-const app=express();
 
-app.get("/",(req,res)=>{
-    res.send("hello from shoppings");
-})
+(async function () {
+  try {
+    const app = express();
+    await prisma.$connect();
 
-app.listen(process.env.PORT,()=>console.log(`listening port ${process.env.PORT}`));
+    shopping(app);
+    app.listen(process.env.PORT, () =>
+      console.log(`listening port ${process.env.PORT}`)
+    );
+  } catch (error) {
+    console.error(error);
+    await prisma.$disconnect();
+    process.exit(1);
+  }
+})();
