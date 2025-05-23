@@ -144,9 +144,9 @@ class userCrudOperation {
 
     const accessToken = jwt.sign(
       { id, email, role },
-      process.env.REFRESHTOKEN_SECRETE,
+      process.env.ACCESSTOKEN_SECRETE,
       {
-        expiresIn: process.env.REFRESHTOKEN_EXPIRY,
+        expiresIn: process.env.ACCESSTOKEN_EXPIRY,
         algorithm: process.env.TOKEN_ALGO_TYPE,
       }
     );

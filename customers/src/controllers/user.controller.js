@@ -1,4 +1,6 @@
+import auth from "../middlewares/auth.middleware.js";
 import customerServices from "../services/customer.service.js";
+import ApiError from "../utils/ApiError.js";
 
 export default (app) => {
   const userService = new customerServices();
@@ -92,7 +94,7 @@ export default (app) => {
     }
   });
 
-  app.post("/v1/logout", async (req, res, next) => {
+  app.post("/v1/logout", auth, async (req, res, next) => {
     try {
       res
         .clearCookie("accessToken")
@@ -107,4 +109,30 @@ export default (app) => {
       next(error);
     }
   });
+
+  app.get(
+    "/v1/user-info",
+    (req, res, next) => {
+      console.log("*******************");
+      next();
+    },
+    auth,
+    async (req, res, next) => {
+      try {
+        const user = req.user;
+        if (!user) {
+          throw new ApiError(404, "User not found...", "User not found...");
+        }
+        
+        console.log("user :",user);
+        res.status(200).json({
+          success: true,
+          message: "user information fetched successfully...",
+          data: user,
+        });
+      } catch (error) {
+        next(error);
+      }
+    }
+  );
 };

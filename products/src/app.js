@@ -1,11 +1,13 @@
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import ApiError from "./utils/ApiError.js";
 import product from "./controllers/product.controller.js";
 
 export default async (app) => {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+  app.use(cookieParser());
   app.use(
     cors({
       origin: "http://localhost:5173",

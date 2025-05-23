@@ -1,12 +1,14 @@
 import { upload } from "../middlewares/multer.middleware.js";
 import ProductServices from "../services/product.service.js";
 import ApiError from "../utils/ApiError.js";
+import auth from "../middlewares/auth.middleware.js"
+
 
 export default async (app) => {
   const productServices = new ProductServices();
 
   //get all products
-  app.get("/v1/get-all-product", async (req, res, next) => {
+  app.get("/v1/get-all-product",auth, async (req, res, next) => {
     try {
       const products = await productServices.getAllProduct();
 
