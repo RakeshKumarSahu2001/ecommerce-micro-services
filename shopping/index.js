@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 dotenv.config({ path: "./.env" });
 import prisma from "./src/database/Connection.js";
-import shopping from "./app.js"
+import shopping from "./src/app.js"
 
 
 (async function () {

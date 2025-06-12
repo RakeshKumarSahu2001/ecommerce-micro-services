@@ -3,8 +3,10 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import ApiError from "./utils/ApiError.js";
 import product from "./controllers/product.controller.js";
+import {connect} from "./services/rabbit.service.js"
 
 export default async (app) => {
+  await connect();
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());

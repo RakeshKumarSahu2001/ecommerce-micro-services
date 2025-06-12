@@ -1,6 +1,7 @@
 import auth from "../middlewares/auth.middleware.js";
 import customerServices from "../services/customer.service.js";
 import ApiError from "../utils/ApiError.js";
+import { subscribeToQueue } from "../services/rabbit.service.js";
 
 export default (app) => {
   const userService = new customerServices();
@@ -112,10 +113,6 @@ export default (app) => {
 
   app.get(
     "/v1/user-info",
-    (req, res, next) => {
-      console.log("*******************");
-      next();
-    },
     auth,
     async (req, res, next) => {
       try {
@@ -135,4 +132,8 @@ export default (app) => {
       }
     }
   );
+
+  subscribeToQueue("new-product-added-into-user-cart",(data)=>{
+    console.log("aueue info",data)
+  })
 };

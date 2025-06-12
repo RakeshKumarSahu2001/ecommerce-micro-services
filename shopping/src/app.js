@@ -1,22 +1,27 @@
 import cors from "cors";
 import express from "express";
-import ApiError from "./src/utils/ApiError.js";
-import shopping from "./src/controllers/shopping.controller.js";
+import ApiError from "./utils/ApiError.js";
+import shopping from "./controllers/shopping.controller.js";
+import {connect} from "./services/rabbit.service.js";
+import cookieParser from "cookie-parser"
+
 
 export default async (app) => {
+  await connect();
   app.use(
     cors({
       origin: "http://localhost:5173",
       credentials: true,
     })
   );
+  app.use(cookieParser());
   app.use(express.json());
   app.use(
     express.urlencoded({
       extended: true,
     })
   );
-
+  
   shopping(app);
 
   app.use((err, req, res, next) => {

@@ -1,14 +1,14 @@
 import { upload } from "../middlewares/multer.middleware.js";
 import ProductServices from "../services/product.service.js";
 import ApiError from "../utils/ApiError.js";
-import auth from "../middlewares/auth.middleware.js"
-
+import auth from "../middlewares/auth.middleware.js";
+import { subscribeToQueue } from "../services/rabbit.service.js";
 
 export default async (app) => {
   const productServices = new ProductServices();
 
   //get all products
-  app.get("/v1/get-all-product",auth, async (req, res, next) => {
+  app.get("/v1/get-all-product", auth, async (req, res, next) => {
     try {
       const products = await productServices.getAllProduct();
 
@@ -181,17 +181,35 @@ export default async (app) => {
     }
   });
 
-  app.get("/v1/filter-props",async(req,res,next)=>{
+  app.get("/v1/filter-props", async (req, res, next) => {
     try {
-      const brands=await productServices.getFilterProperties();
+      const brands = await productServices.getFilterProperties();
 
       res.status(200).json({
-        success:true,
-        message:"Brand information fetched successfully from the db...",
-        data:brands
-      })
+        success: true,
+        message: "Brand information fetched successfully from the db...",
+        data: brands,
+      });
     } catch (error) {
       next(error);
     }
-  })
+  });
+
+  //check product is available or not for adding product into the cart
+  subscribeToQueue("PRODUCT_AVAILABILITY_CHECK", async (data, msg,channel) => {
+    const { productId, quantity } = JSON.parse(data);
+    const productInfo = await productServices.getProduct(productId);
+    const isProductAvailable =
+      productInfo && productInfo?.stockQuantity > quantity;
+    console.log(isProductAvailable, "isProductAvailable");
+    channel.sendToQueue(
+      msg.properties.replyTo,
+      Buffer.from(JSON.stringify({ exists: isProductAvailable, productId })),
+      {
+        correlationId: msg.properties.correlationId,
+      }
+    );
+
+    channel.ack(msg);
+  });
 };
