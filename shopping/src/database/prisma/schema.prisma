@@ -21,32 +21,38 @@ enum Status {
 
 model Product {
   id             String  @id @default(uuid())
-  productId      String?
   name           String?
   description    String?
   thumbnailImage String?
   units          Int?
   price          Decimal @db.Decimal(9, 2)
 
-  cartId String?
-  cart   Cart?   @relation(fields: [cartId], references: [id])
-
-  orderId String?
-  order   Order?  @relation(fields: [orderId], references: [id])
+  cartItems CartItem[]
+  // Order     Order?     @relation(fields: [orderId], references: [id])
+  // orderId   String?
 }
 
 model Cart {
-  id         String    @id @default(uuid())
+  id         String     @id @default(uuid())
   customerId String
-  items      Product[]
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  items      CartItem[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+}
+
+model CartItem {
+  id        String  @id @default(uuid())
+  unit      Int
+  cart      Cart    @relation(fields: [cartId], references: [id])
+  cartId    String
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
 }
 
 model Order {
-  id         String    @id @default(uuid())
+  id         String  @id @default(uuid())
   customerId String
-  amount     Decimal   @db.Decimal(9, 2)
-  status     Status    @default(PENDING)
-  items      Product[]
+  amount     Decimal @db.Decimal(9, 2)
+  status     Status  @default(PENDING)
+  // items      Product[]
 }

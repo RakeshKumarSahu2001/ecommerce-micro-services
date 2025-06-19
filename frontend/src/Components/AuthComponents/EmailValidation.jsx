@@ -26,7 +26,6 @@ function Emailvalidation() {
   }, [navigate, dispatch, isEmailVerified])
 
   return (
-
     <div className="flex flex-col !w-[100%] !h-[100%] justify-center items-center">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <img
@@ -55,8 +54,9 @@ function Emailvalidation() {
         </label>
         {errors.otp && <p className="text-red-500">{`${errors.otp.message}`}</p>}
         <button
-          type="button"
-          className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          // type="button"
+          className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline  focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+
         >
           Submit
         </button>

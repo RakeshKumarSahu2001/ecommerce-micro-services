@@ -35,11 +35,14 @@ export default (app) => {
     }
   });
 
-  app.post("/v1/verify-otp/:id", async (req, res, next) => {
+  app.post("/v1/verify-otp/:id",(req,res,next)=>{
+    console.log("###################")
+    next()
+  }, async (req, res, next) => {
     try {
       const { id } = req.params;
       const { otp } = req.body;
-
+console.log(otp,"************")
       await userService.validateOtp({ id, otp });
 
       res.status(200).json({

@@ -16,7 +16,10 @@ app.use(express.json());
 app.use(express.urlencoded());
 
 app.use("/customer", proxy("http://localhost:8081"));
-app.use("/shopping", proxy("http://localhost:8082"));
+app.use("/shopping",(req,res,next)=>{
+  console.log("hello from shopping");
+  next();
+}, proxy("http://localhost:8082"));
 app.use("/", proxy("http://localhost:8083")); //products
 
 app.listen(process.env.PORT, () =>

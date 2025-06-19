@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+// import axios from "axios";
+import axiosInstance from "../../AxiosConfig.js";
 
 export const EmailValidation = createAsyncThunk("users/emailValidation", async (data) => {
 
     const {otp,id}=data;
     try {
-        const response = await axios.post(`/api/v1/users/verify-otp/${id}`, {otp})
+        const response = await axiosInstance.post(`/customer/v1/verify-otp/${id}`, {otp})
         return response.data.data;
     } catch (error) {
         console.error(error)

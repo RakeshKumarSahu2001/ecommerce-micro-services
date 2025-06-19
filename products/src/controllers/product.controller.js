@@ -8,10 +8,9 @@ export default async (app) => {
   const productServices = new ProductServices();
 
   //get all products
-  app.get("/v1/get-all-product", auth, async (req, res, next) => {
+  app.get("/v1/get-all-product", async (req, res, next) => {
     try {
       const products = await productServices.getAllProduct();
-
       res.status(200).json({
         success: true,
         message: "All product record fetched successfully.",
@@ -196,7 +195,7 @@ export default async (app) => {
   });
 
   //check product is available or not for adding product into the cart
-  subscribeToQueue("PRODUCT_AVAILABILITY_CHECK", async (data, msg,channel) => {
+  subscribeToQueue("PRODUCT_AVAILABILITY_CHECK", async (data, msg, channel) => {
     const { productId, quantity } = JSON.parse(data);
     const productInfo = await productServices.getProduct(productId);
     const isProductAvailable =
@@ -204,7 +203,16 @@ export default async (app) => {
     console.log(isProductAvailable, "isProductAvailable");
     channel.sendToQueue(
       msg.properties.replyTo,
-      Buffer.from(JSON.stringify({ exists: isProductAvailable, productId })),
+      Buffer.from(
+        JSON.stringify({
+          exists: isProductAvailable,
+          productId,
+          name: productInfo?.productName,
+          description: productInfo?.description,
+          thumbnailImage: productInfo?.thumbnailImage,
+          price: productInfo?.price,
+        })
+      ),
       {
         correlationId: msg.properties.correlationId,
       }

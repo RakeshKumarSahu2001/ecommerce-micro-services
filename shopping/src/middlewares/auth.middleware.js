@@ -6,7 +6,7 @@ async function auth(req, res, next) {
     const token =
       req.cookies?.accessToken || req.header("Authorization").split(" ")[1];
 
-    if (!token) {
+      if (!token) {
       throw new ApiError(401, "Unautherized User...", "Unautherized User...");
     }
 
