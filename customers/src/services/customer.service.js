@@ -2,7 +2,6 @@ import userCrudOperation from "../database/repository/user.repository.js";
 import ApiError from "../utils/ApiError.js";
 import bcrypt from "bcryptjs";
 import admin from "../utils/FirebaseConfig.js";
-import prisma from "../database/Connection.js";
 
 class customerServices {
   constructor() {
@@ -133,7 +132,7 @@ class customerServices {
           isUserExist?.role
         );
 
-        return { accessToken, refreshToken };
+      return { accessToken, refreshToken };
     } catch (error) {
       throw new ApiError(500, "Login error..", error);
     }
@@ -141,16 +140,16 @@ class customerServices {
 
   async loginWithGoogle(userInput) {
     try {
-      const decoded=await admin.auth().verifyIdToken(userInput);
-      
-      if (!decoded?.email  || !decoded?.uid) {
+      const decoded = await admin.auth().verifyIdToken(userInput);
+
+      if (!decoded?.email || !decoded?.uid) {
         throw new ApiError(
           401,
           "Credentials required...",
           "Credentials required..."
         );
       }
-      
+
       const isUserExist = await this.repository.findUser(decoded?.email);
 
       if (!isUserExist) {
@@ -174,7 +173,82 @@ class customerServices {
     }
   }
 
+  async getAllUsers(){
+    try {
+      
+    } catch (error) {
+      throw new ApiError(
+        400,
+        "Error occured while fetching all the users record...",
+        "Error occured while fetching all the users record..."
+      )
+    }
+  }
 
+  async addUserInfo(userInput) {
+    try {
+      const { id } = userInput;
+      if (!id) {
+        throw new ApiError(
+          404,
+          "User doesn't exist...",
+          "User doesn't exist..."
+        );
+      }
+      const updatedInfo = await this.repository.addUserInfo(userInput);
+      return updatedInfo;
+    } catch (error) {
+      throw new ApiError(
+        401,
+        "Error occured while adding the user information...",
+        "Error occured while adding the user information..."
+      );
+    }
+  }
+
+  async updateUserInfo(userInput) {
+    try {
+      const { id } = userInput;
+      if (!id) {
+        throw new ApiError(
+          404,
+          "Id is required to update the information...",
+          "Id is required to update the information..."
+        );
+      }
+
+      const updatedInfo = await this.repository.updateUserInfo(userInput);
+      return updatedInfo;
+    } catch (error) {
+      throw new ApiError(
+        401,
+        "Error occured while updating the user information...",
+        "Error occured while updating the user information..."
+      );
+    }
+  }
+
+  async updatedAddress(userInput) {
+    try {
+      const { addressId } = userInput;
+      if (!addressId) {
+        throw new ApiError(
+          401,
+          "Address id is required to update....",
+          "Address id is required to update..."
+        );
+      }
+      const updatedInfo = await this.repository.updateAddress(userInput);
+
+      return updatedInfo;
+    } catch (error) {
+      throw new ApiError(
+        401,
+        "Error occured while updating the address...",
+        "Error occured while updating the address..."
+      );
+    }
+  }
 }
 
 export default customerServices;

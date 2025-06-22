@@ -69,7 +69,6 @@ model Auth {
   name              String?
   email             String    @unique
   password          String?
-  profilePic        String?
   phone             String?
   address           Address[]
   orders            Orders[]

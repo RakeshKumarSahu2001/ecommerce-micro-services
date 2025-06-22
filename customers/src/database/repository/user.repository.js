@@ -26,11 +26,11 @@ class userCrudOperation {
 
   async registerUserUsingGoogle(userInputs) {
     try {
-      const { name, profilePic, email, firebaseUid } = userInputs;
+      const { name, email, firebaseUid } = userInputs;
       const regRes = await prisma.auth.create({
         data: {
           name,
-          profilePic,
+
           email,
           firebaseUid,
           registeredWith: "GOOGLE",
@@ -152,6 +152,124 @@ class userCrudOperation {
     );
 
     return { accessToken, refreshToken };
+  }
+
+  //fetch all customers
+  async getAllCustomers() {
+    try {
+      const allCustomers = await prisma.auth.findMany({
+        select: {
+          name: true,
+          email: true,
+          phone: true,
+          gender: true,
+          role:true,
+        },
+        include:{
+          address:true,
+          orders:true
+        }
+      });
+      return allCustomers;
+    } catch (error) {
+      throw new ApiError(
+        404,
+        "User information not present...",
+        "User information not present..."
+      );
+    }
+  }
+
+  //add userinformation
+  async addUserInfo(userInput) {
+    try {
+      const {
+        id,
+        name,
+        phone,
+        gender,
+        dateOfBirth,
+        street,
+        city,
+        state,
+        country,
+        postalCode,
+      } = userInput;
+      const updatedInformation = await prisma.auth.update({
+        where: {
+          id,
+        },
+        data: {
+          name,
+          phone,
+          gender,
+          dateOfBirth,
+          address: {
+            create: { street, city, state, country, postalCode },
+          },
+        },
+      });
+
+      return updatedInformation;
+    } catch (error) {
+      throw new ApiError(
+        401,
+        "Some error occured while adding user information...",
+        "Some error occured while adding user information..."
+      );
+    }
+  }
+
+  //update userinformation
+  async updateUserInfo(userInput) {
+    try {
+      const { id, name, phone, gender, dateOfBirth } = userInput;
+      const updatedInfo = await prisma.auth.update({
+        where: {
+          id,
+        },
+        data: {
+          name,
+          phone,
+          gender,
+          dateOfBirth,
+        },
+      });
+
+      return updatedInfo;
+    } catch (error) {
+      throw new ApiError(
+        401,
+        "Some error occured while updating user information...",
+        "Some error occured while updating user information..."
+      );
+    }
+  }
+
+  //update address
+  async updateAddress(userInput) {
+    try {
+      const { addressId, street, city, state, country, postalCode } = userInput;
+
+      const updatedAddress = await prisma.address.update({
+        where: { id: addressId },
+        data: {
+          street,
+          city,
+          state,
+          country,
+          postalCode,
+        },
+      });
+
+      return updatedAddress;
+    } catch (error) {
+      throw new ApiError(
+        401,
+        "Some error occured while adding user information...",
+        "Some error occured while adding user information..."
+      );
+    }
   }
 }
 
