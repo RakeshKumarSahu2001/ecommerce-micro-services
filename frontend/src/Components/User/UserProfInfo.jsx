@@ -14,7 +14,8 @@ function UserInfo() {
     const isProfData = useSelector((state) => state.manageUserProfInfoSlice.isProfData)
 
     const submit= async (formData) => {
-        await dispatch(AddUserProfInfoById({ data: formData, id: id }));
+        console.log("formData :",formData);
+        await dispatch(AddUserProfInfoById({ data: formData}));
     }
 
     useEffect(() => {

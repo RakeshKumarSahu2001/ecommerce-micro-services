@@ -111,10 +111,10 @@ export default (app) => {
     }
   });
 
-  app.post("/v1/add-user-profile-info", auth, async (req, res, next) => {
+  app.post("/v1/add-user-profile-info",auth, async (req, res, next) => {
     try {
-      const { id } = req.user?.data;
-      console.log("req.body", req.body);
+      console.log("req.body",req.body);
+      const { id } = req.user;
       const addedInformation = await userService.addUserInfo({
         ...req.body,
         id,
@@ -131,8 +131,8 @@ export default (app) => {
 
   app.put("/v1/update-profile-info", auth, async (req, res, next) => {
     try {
-      console.log("req.body", req.body);
-      const updateUserInfo = await userService.updateUserInfo(req.body);
+      const { id } = req.user;
+      const updateUserInfo = await userService.updateUserInfo({...req.body,id});
 
       res.status(200).json({
         success: true,
@@ -144,14 +144,13 @@ export default (app) => {
     }
   });
 
-  app.get("/v1/all-users",async(req,res,next)=>{
-    try {
-
-      
+  app.get("/v1/all-users",auth,async(req,res,next)=>{
+    try {console.log("req.user?.id",req.user?.id)
+      const allUsers=await userService.getAllUsers(req.user?.id);
       res.status(200).json({
         success:true,
         message:"Users fetched successfully...",
-        data:null
+        data:allUsers
       })
     } catch (error) {
       next(error);
@@ -175,6 +174,19 @@ export default (app) => {
       next(error);
     }
   });
+
+  app.post("/v1/add-new-address",auth,async(req,res,next)=>{
+    try {
+      // const addresses=await userService.
+      res.status(200).json({
+        success:true,
+        message:"New address updated successfully...",
+        data:null
+      })
+    } catch (error) {
+      next(error);
+    }
+  })
 
   subscribeToQueue("new-product-added-into-user-cart", (data) => {
     console.log("aueue info", data);

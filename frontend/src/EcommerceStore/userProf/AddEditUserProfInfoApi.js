@@ -1,14 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import axiosInstance from "../../AxiosConfig.js";
 
 
 export const AddUserProfInfoById = createAsyncThunk(
     "user/addUserProfileInfo",
     async (formData) => {
-
         try {
-            const response = await axios.post(
-                `/api/v1/users/add-user-profile-info/${formData.id}`,
+            const response = await axiosInstance.post(
+                `/customer/v1/add-user-profile-info`,
                 formData.data
             );
             return response.data;
@@ -23,7 +22,7 @@ export const EditUserProfInfoById = createAsyncThunk(
     async (formData) => {
 
         try {
-            const response = await axios.put(
+            const response = await axiosInstance.put(
                 `/api/v1/users/edit-user-info-by-id/${formData.id}`,
                 formData.data
             );

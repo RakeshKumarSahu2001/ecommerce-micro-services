@@ -173,15 +173,16 @@ class customerServices {
     }
   }
 
-  async getAllUsers(){
+  async getAllUsers(id) {
     try {
-      
+      const allUser = await this.repository.getAllCustomers(id);
+      return allUser;
     } catch (error) {
       throw new ApiError(
         400,
         "Error occured while fetching all the users record...",
         "Error occured while fetching all the users record..."
-      )
+      );
     }
   }
 
@@ -198,6 +199,7 @@ class customerServices {
       const updatedInfo = await this.repository.addUserInfo(userInput);
       return updatedInfo;
     } catch (error) {
+      console.log("error :", error);
       throw new ApiError(
         401,
         "Error occured while adding the user information...",
@@ -226,6 +228,10 @@ class customerServices {
         "Error occured while updating the user information..."
       );
     }
+  }
+
+  async addNewAddress(userInput){
+    
   }
 
   async updatedAddress(userInput) {

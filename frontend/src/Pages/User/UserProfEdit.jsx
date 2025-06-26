@@ -17,7 +17,7 @@ function UserProfEdit() {
     }
 
     const onSubmit = (formData) => {
-        dispatch(EditUserProfInfoById({ data: formData, id }));
+        dispatch(EditUserProfInfoById({ data: formData}));
         navigate(`/shopnow/user-info/${id}`)
     };
 

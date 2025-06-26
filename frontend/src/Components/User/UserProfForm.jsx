@@ -14,119 +14,119 @@ function UserProfForm({ submit }) {
                 onSubmit={handleSubmit(submit)}
             >
                 <div>
-                    <label htmlFor="FullName">Full name</label>
+                    <label htmlFor="name">Full name</label>
                     <br />
                     <input
                         type="text"
                         placeholder="Enter your name"
                         className="input input-bordered input-primary w-full max-w-xs"
-                        defaultValue={userInfo?.FullName}
-                        {...register("FullName", {
+                        defaultValue={userInfo?.name}
+                        {...register("name", {
                             required: {
                                 value: true,
                                 message: "Full Name is Required",
                             },
                         })}
                     />
-                    {errors.FullName && <p>{errors.FullName.message}</p>}
+                    {errors.name && <p>{errors.name.message}</p>}
                 </div>
                 <div>
-                    <label htmlFor="Phone">Phone</label>
+                    <label htmlFor="phone">phone</label>
                     <br />
                     <input
                         type="text"
                         placeholder="Enter your phone"
                         className="input input-bordered input-primary w-full max-w-xs"
-                        defaultValue={userInfo?.Phone}
-                        {...register("Phone", {
+                        defaultValue={userInfo?.phone}
+                        {...register("phone", {
                             required: {
                                 value: true,
-                                message: "Phone is Required",
+                                message: "phone is Required",
                             },
                         })}
                     />
-                    {errors.FullName && <p>{errors.FullName.message}</p>}
+                    {errors.name && <p>{errors.name.message}</p>}
                 </div>
                 <div>
-                    <label htmlFor="Street">Street</label>
+                    <label htmlFor="street">street</label>
                     <br />
                     <input
                         type="text"
-                        placeholder="Enter Your Street"
+                        placeholder="Enter Your street"
                         className="input input-bordered input-primary w-full max-w-xs"
-                        defaultValue={userInfo?.Street}
-                        {...register("Street", { required: false })}
+                        defaultValue={userInfo?.street}
+                        {...register("street", { required: false })}
                     />
-                    {errors.FullName && <p>{errors.FullName.message}</p>}
+                    {errors.name && <p>{errors.name.message}</p>}
                 </div>
                 <div>
-                    <label htmlFor="PostalCode">Pincode</label>
+                    <label htmlFor="postalCode">Pincode</label>
                     <br />
                     <input
                         type="text"
-                        placeholder="Enter Your PostalCode"
+                        placeholder="Enter Your postalCode"
                         className="input input-bordered input-primary w-full max-w-xs"
-                        defaultValue={userInfo?.PostalCode}
-                        {...register("PostalCode", { required: false })}
+                        defaultValue={userInfo?.postalCode}
+                        {...register("postalCode", { required: false })}
                     />
-                    {errors.FullName && <p>{errors.FullName.message}</p>}
+                    {errors.name && <p>{errors.name.message}</p>}
      
                 </div>
                 <div>
-                    <label htmlFor="City">City</label>
+                    <label htmlFor="city">city</label>
                     <br />
                     <input
                         type="text"
-                        placeholder="Enter Your City"
+                        placeholder="Enter Your city"
                         className="input input-bordered input-primary w-full max-w-xs"
-                        defaultValue={userInfo?.City}
-                        {...register("City", { required: false })}
+                        defaultValue={userInfo?.city}
+                        {...register("city", { required: false })}
                     />
     
                 </div>
                 <div>
-                    <label htmlFor="State">State</label>
+                    <label htmlFor="state">State</label>
                     <br />
                     <input
                         type="text"
                         placeholder="Enter Your State"
                         className="input input-bordered input-primary w-full max-w-xs"
-                        defaultValue={userInfo?.State}
-                        {...register("State", { required: false })}
+                        defaultValue={userInfo?.state}
+                        {...register("state", { required: false })}
                     />
              
                 </div>
                 <div>
-                    <label htmlFor="Country">Country</label>
+                    <label htmlFor="country">Country</label>
                     <br />
                     <input
                         type="text"
                         placeholder="Enter Your Country"
                         className="input input-bordered input-primary w-full max-w-xs"
-                        defaultValue={userInfo?.Country}
-                        {...register("Country", { required: false })}
+                        defaultValue={userInfo?.country}
+                        {...register("country", { required: false })}
                     />
                  
                 </div>
                 <div>
-                    <label htmlFor="DateOfBirth">DOB</label>
+                    <label htmlFor="dateOfBirth">DOB</label>
                     <br />
 
                     <input
                         type="date"
                         className="input input-bordered input-primary w-full max-w-xs"
-                        {...register("DateOfBirth", {
+                        {...register("dateOfBirth", {
                             required: {
                                 value: true,
                                 message: "DOB is Required",
                             },
                         })}
                     />
-                    {errors.DateOfBirth && <p>{errors.DateOfBirth.message}</p>}
+                    {errors.dateOfBirth && <p>{errors.dateOfBirth.message}</p>}
 
                 </div>
                 <div>
-                    <label htmlFor="Gender">Gender</label>
+                    <label htmlFor="gender">Gender</label>
                     <br />
                     <div className="form-control">
                         <label className="label cursor-pointer justify-normal p-0">
@@ -134,9 +134,9 @@ function UserProfForm({ submit }) {
                                 type="radio"
                                 className="radio checked:bg-blue-500 h-4 w-4"
                                 {
-                                ...register("Gender")
+                                ...register("gender")
                                 }
-                                value="male"
+                                value="Male"
                             />
                             <span className="label-text px-4">Male</span>
                         </label>
@@ -147,9 +147,9 @@ function UserProfForm({ submit }) {
                                 type="radio"
                                 className="radio checked:bg-blue-500 h-4 w-4"
                                 {
-                                ...register("Gender")
+                                ...register("gender")
                                 }
-                                value="female"
+                                value="Female"
                             />
                             <span className="label-text px-4">Female</span>
                         </label>
@@ -160,7 +160,7 @@ function UserProfForm({ submit }) {
                                 type="radio"
                                 className="radio checked:bg-blue-500 h-4 w-4"
                                 {
-                                ...register("Gender")
+                                ...register("gender")
                                 }
                                 value="other"
                             />

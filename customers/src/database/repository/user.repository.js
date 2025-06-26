@@ -155,20 +155,23 @@ class userCrudOperation {
   }
 
   //fetch all customers
-  async getAllCustomers() {
+  async getAllCustomers(id) {
     try {
       const allCustomers = await prisma.auth.findMany({
+        where: {
+          id: {
+            not: id,
+          },
+        },
         select: {
           name: true,
           email: true,
           phone: true,
           gender: true,
-          role:true,
+          role: true,
+          address: true,
+          orders: true,
         },
-        include:{
-          address:true,
-          orders:true
-        }
       });
       return allCustomers;
     } catch (error) {
@@ -195,6 +198,7 @@ class userCrudOperation {
         country,
         postalCode,
       } = userInput;
+
       const updatedInformation = await prisma.auth.update({
         where: {
           id,
@@ -203,9 +207,15 @@ class userCrudOperation {
           name,
           phone,
           gender,
-          dateOfBirth,
+          dateOfBirth: new Date(dateOfBirth),
           address: {
-            create: { street, city, state, country, postalCode },
+            create: {
+              street,
+              city,
+              state,
+              country,
+              postalCode: String(postalCode),
+            },
           },
         },
       });
@@ -224,6 +234,7 @@ class userCrudOperation {
   async updateUserInfo(userInput) {
     try {
       const { id, name, phone, gender, dateOfBirth } = userInput;
+      console.log("userInput :", userInput);
       const updatedInfo = await prisma.auth.update({
         where: {
           id,
@@ -232,7 +243,7 @@ class userCrudOperation {
           name,
           phone,
           gender,
-          dateOfBirth,
+          dateOfBirth: new Date(dateOfBirth),
         },
       });
 
