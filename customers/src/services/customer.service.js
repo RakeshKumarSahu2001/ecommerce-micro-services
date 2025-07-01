@@ -173,6 +173,18 @@ class customerServices {
     }
   }
 
+  async getCustomer(id){
+    try {
+      if(!id){
+        throw new ApiError(401,"UserId is required...","UserId is required...");
+      }
+      const customer=await this.repository.findUserById(id);
+      return customer;
+    } catch (error) {
+      throw new ApiError(404,"User doesn't exist...","User doesn't exist...");
+    }
+  }
+
   async getAllUsers(id) {
     try {
       const allUser = await this.repository.getAllCustomers(id);
@@ -199,7 +211,6 @@ class customerServices {
       const updatedInfo = await this.repository.addUserInfo(userInput);
       return updatedInfo;
     } catch (error) {
-      console.log("error :", error);
       throw new ApiError(
         401,
         "Error occured while adding the user information...",
@@ -230,8 +241,27 @@ class customerServices {
     }
   }
 
-  async addNewAddress(userInput){
-    
+  async addAddress(userInput) {
+    try {
+      const {id}=userInput;
+      if (!id) {
+        throw new ApiError(
+          404,
+          "Id is required to update the information...",
+          "Id is required to update the information..."
+        );
+      }
+
+      const addedAddress=await this.repository.addAddress(userInput);
+
+      return addedAddress;
+    } catch (error) {
+            throw new ApiError(
+        401,
+        "Error occured while adding new address information...",
+        "Error occured while adding new address information..."
+      );
+    }
   }
 
   async updatedAddress(userInput) {

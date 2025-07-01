@@ -8,7 +8,6 @@ export const FetchProductFilterPropsApi = createAsyncThunk(
       const response = await axiosInstance.get("/v1/filter-props");
       return response.data.data;
     } catch (error) {
-      console.error(error);
       rejectWithValue(error);
     }
   }

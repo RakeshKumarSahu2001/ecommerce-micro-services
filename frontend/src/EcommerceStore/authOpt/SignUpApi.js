@@ -11,7 +11,6 @@ export const signUpApi = createAsyncThunk(
       const response = await axiosInstance.post("/customer/v1/register", data);
       return response.data.data;
     } catch (err) {
-      console.error(err);
       return rejectWithValue(err);
     }
   }
@@ -31,10 +30,8 @@ export const signUpWithGoogleFirebase = createAsyncThunk(
         "/customer/v1/sign-up-with-google",
         token
       );
-      console.log("user firebase registration information :",response);
       return response.data.data;
     } catch (error) {
-      console.error(error);
       rejectWithValue(error);
     }
   }

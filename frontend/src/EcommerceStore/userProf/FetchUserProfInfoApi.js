@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import axiosInstance from "../../AxiosConfig.js";
 
 
 export const fetchUserProfInfoById = createAsyncThunk("user/fetchUserProfileInfo", async (id) => {
     try {
-        const response = await axios.get(`/api/v1/users/fetch-user-profile-info/${id}`);
+        const response = await axiosInstance.get(`/customer/v1/user`);
         return response.data.data;
     } catch (error) {
         throw error;

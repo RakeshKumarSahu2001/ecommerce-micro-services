@@ -4,7 +4,7 @@ import ApiError from "../utils/ApiError.js";
 async function auth(req, res, next) {
   try {
     const token = req.cookies?.accessToken || req.header("Authorization").split(" ")[1];
-    console.log()
+
     const response = await axios.get(
       `${process.env.AUTH_BASE_URL + "/customer/v1/user-info"}`,
       {
@@ -20,7 +20,6 @@ async function auth(req, res, next) {
     }
 
     req.user=response.data;
-    console.log("user :",req.user)
     next();
   } catch (error) {
     next(error);

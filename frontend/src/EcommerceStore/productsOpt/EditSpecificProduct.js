@@ -8,7 +8,6 @@ export const EditSpecificProductApi = createAsyncThunk("products/EditSpecificPro
             const response = await axios.put(`/api/v1/admin/edit-product-by-id/${id}`, updatedData);
             return response.data;
         } catch (error) {
-            console.error(error);
             return rejectWithValue(error)
         }
     })

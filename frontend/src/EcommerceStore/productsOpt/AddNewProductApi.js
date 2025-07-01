@@ -27,7 +27,6 @@ export const AddNewProductApi = createAsyncThunk("products/addNewProduct",
 
             return response.data
         } catch (err) {
-            console.error(err);
             return rejectWithValue(err);
         }
     })

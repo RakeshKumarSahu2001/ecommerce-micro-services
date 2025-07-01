@@ -2,7 +2,7 @@
 import { EditUserProfInfoById } from "../../EcommerceStore/userProf/AddEditUserProfInfoApi";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import UserProfForm from "../../Components/User/UserProfForm";
+import EditUserInfoFrom from "../../Components/User/EditUserInfoFrom";
 
 
 
@@ -23,7 +23,7 @@ function UserProfEdit() {
 
     return (
         <div>
-            <UserProfForm submit={onSubmit} />
+            <EditUserInfoFrom submit={onSubmit} />
         </div>
     );
 }

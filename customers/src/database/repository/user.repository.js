@@ -72,6 +72,12 @@ class userCrudOperation {
           id,
         },
         select: {
+          id:true,
+          name: true,
+          email: true,
+          phone: true,
+          dateOfBirth: true,
+          gender: true,
           verifyOTP: true,
           verifyOTPExpireAt: true,
         },
@@ -234,7 +240,6 @@ class userCrudOperation {
   async updateUserInfo(userInput) {
     try {
       const { id, name, phone, gender, dateOfBirth } = userInput;
-      console.log("userInput :", userInput);
       const updatedInfo = await prisma.auth.update({
         where: {
           id,
@@ -253,6 +258,31 @@ class userCrudOperation {
         401,
         "Some error occured while updating user information...",
         "Some error occured while updating user information..."
+      );
+    }
+  }
+
+  //add new address
+  async addAddress(userInput) {
+    const { id, street, city, state, country, postalCode } = userInput;
+    try {
+      const addresses = await prisma.auth.update({
+        where: {
+          id,
+        },
+        data: {
+          address: {
+            create: { street, city, state, country, postalCode },
+          },
+        },
+      });
+
+      return addresses;
+    } catch (error) {
+      throw new ApiError(
+        401,
+        "Some error occured while adding address information...",
+        "Some error occured while adding address information..."
       );
     }
   }

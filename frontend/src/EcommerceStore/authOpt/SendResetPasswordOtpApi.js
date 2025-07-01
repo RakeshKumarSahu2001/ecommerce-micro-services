@@ -8,7 +8,6 @@ export const SendResetPasswordOtpApi = createAsyncThunk("users/sendResetPassword
         const response = await axios.post("/api/v1/users/send-reset-password-otp", data);
         return response.data.data;
     } catch (error) {
-        console.error(error);
         rejectWithValue(error);
     }
 })

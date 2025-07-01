@@ -18,7 +18,6 @@ async function auth(req, res, next) {
         },
       }
     );
-    // console.log("auth response :", response.data);
     const user = response.data;
     if (!user) {
       throw new ApiError(401, "Unautherized user...", "Unautherized user...");

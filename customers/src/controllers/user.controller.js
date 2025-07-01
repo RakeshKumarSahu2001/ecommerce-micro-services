@@ -113,7 +113,6 @@ export default (app) => {
 
   app.post("/v1/add-user-profile-info",auth, async (req, res, next) => {
     try {
-      console.log("req.body",req.body);
       const { id } = req.user;
       const addedInformation = await userService.addUserInfo({
         ...req.body,
@@ -145,13 +144,27 @@ export default (app) => {
   });
 
   app.get("/v1/all-users",auth,async(req,res,next)=>{
-    try {console.log("req.user?.id",req.user?.id)
+    try {
       const allUsers=await userService.getAllUsers(req.user?.id);
       res.status(200).json({
         success:true,
         message:"Users fetched successfully...",
         data:allUsers
       })
+    } catch (error) {
+      next(error);
+    }
+  })
+
+  app.get("/v1/user",auth,async(req,res,next)=>{
+    try {
+      const user=await userService.getCustomer(req.user.id);
+      res.status(200).json({
+        success:true,
+        message:"User information fetched successfully...",
+        data:user
+      })
+
     } catch (error) {
       next(error);
     }
@@ -175,13 +188,14 @@ export default (app) => {
     }
   });
 
-  app.post("/v1/add-new-address",auth,async(req,res,next)=>{
+  app.post("/v1/add-address",auth,async(req,res,next)=>{
     try {
-      // const addresses=await userService.
+      const {id}=req.user
+      const addresses=await userService.addAddress({...req.body,id})
       res.status(200).json({
         success:true,
         message:"New address updated successfully...",
-        data:null
+        data:addresses
       })
     } catch (error) {
       next(error);

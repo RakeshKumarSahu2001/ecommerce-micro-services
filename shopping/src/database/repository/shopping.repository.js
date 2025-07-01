@@ -105,7 +105,6 @@ class ShoppingCrudOperation {
         }
       })
 
-      console.log("deleted product info :",removedProduct);
       return removedProduct;
     } catch (error) {
       throw new ApiError(

@@ -7,7 +7,6 @@ export const VerifyResetOtpApi = createAsyncThunk("users/verifyResetOtp", async 
         const response = await axios.post("/api/v1/users/reset-password", data);
         return response.data.data;
     } catch (error) {
-        console.error(error);
         rejectWithValue(error);
     }
 })

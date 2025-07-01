@@ -8,17 +8,14 @@ export default async (app) => {
   app.post("/v1/add-to-cart", auth, async (req, res, next) => {
     try {
       const {productId,quantity} = req.body;
-      console.log("req.user :",req.user)
       // publishToQueue("new-product-added-into-user-cart",JSON.stringify(body));
       const productAvailability = await publishToQueue(
         "PRODUCT_AVAILABILITY_CHECK",
         {productId,quantity}
       );
 
-      console.log("productAvailability", productAvailability);
       const isInsertedToCart=await shoppingService.addToCart({...productAvailability,quantity,customerId:req.user?.data?.id});
-      console.log("isInsertedToCart :",isInsertedToCart);
-      // res.status(200).send("hello from shoppings");
+
       res.status(200).json({
         data:isInsertedToCart,
         success:true,
@@ -32,8 +29,8 @@ export default async (app) => {
   app.get("/v1/get-cart-product",auth,async(req,res,next)=>{
     try {
       const {id}=req.user?.data;
-      console.log("id get from params :",id,req.user?.data?.id);
-      const allUserCartProducts=await shoppingService.fetchFromCart(id)
+
+      const allUserCartProducts=await shoppingService.fetchFromCart(id);
       res.status(200).json({
         success:true,
         message:"User's cart info fetched successfully...",

@@ -102,7 +102,6 @@ export default function Product() {
       });
     }
 
-    console.log("information", filterBrand, filterCategory);
   };
 
   const filteredProducts = useSelector(

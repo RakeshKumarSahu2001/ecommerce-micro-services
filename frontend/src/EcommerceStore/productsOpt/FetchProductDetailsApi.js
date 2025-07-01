@@ -7,7 +7,6 @@ export const FetchProductDetailsApi = createAsyncThunk("products/fetchProductByI
 
         return response.data.data;
     } catch (err) {
-        console.error(err);
         rejectWithValue(err)
     }
 })

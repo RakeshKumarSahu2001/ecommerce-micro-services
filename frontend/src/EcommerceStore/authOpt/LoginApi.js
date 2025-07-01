@@ -7,9 +7,13 @@ export const loginApi = createAsyncThunk(
   "user/loginUser",
   async (data, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post(`/customer/v1/login`, data, {
-        withCredentials: true,
-      });
+      const response = await axiosInstance.post(
+        `/customer/v1/login`,
+        data
+        //   , {
+        //   withCredentials: true,
+        // }
+      );
 
       const userData = {
         id: response.data.data.id,
@@ -39,10 +43,10 @@ export const loginWithGoogle = createAsyncThunk(
 
       const response = await axiosInstance.post(
         "/customer/v1/login-with-google",
-        token,
-        {
-          withCredentials: true,
-        }
+        token
+        // {
+        //   withCredentials: true,
+        // }
       );
       return response.data.data;
     } catch (error) {
@@ -85,10 +89,10 @@ export const loginSlice = createSlice({
       state.isUserExist = false;
     });
 
-    builder.addCase(loginWithGoogle.fulfilled,(state,action)=>{
-      state.isUserExist=true;
-      state.loggedInUser=action.payload;
-    })
+    builder.addCase(loginWithGoogle.fulfilled, (state, action) => {
+      state.isUserExist = true;
+      state.loggedInUser = action.payload;
+    });
 
     builder.addCase(logoutApi.fulfilled, (state) => {
       state.isUserExist = false;
