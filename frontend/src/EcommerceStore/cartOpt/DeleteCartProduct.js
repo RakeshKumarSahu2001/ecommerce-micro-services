@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import axiosInstance from "../../AxiosConfig";
 
 export const deleteCartProductApi = createAsyncThunk("cart/deleteCartProduct", async (id) => {
     try {
-        const response = await axios.delete(`/api/v1/users/delete-cart-product/${id}`);
+        const response = await axiosInstance.delete(`/shopping/v1/remove-from-cart/${id}`);
         return response.data.data;
     } catch (error) {
         throw error;

@@ -23,7 +23,7 @@ async function auth(req, res, next) {
       throw new ApiError(401, "Unautherized user...", "Unautherized user...");
     }
 
-    req.user = response.data;
+    req.user = response.data.data;
     next();
   } catch (error) {
     next(error);

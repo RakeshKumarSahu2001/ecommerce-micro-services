@@ -8,6 +8,7 @@ import { useraddToCartSlice } from "../EcommerceStore/cartOpt/FetchUserCartProdu
 
 function Cart({ handleMoveToProducts }) {
     const cartProducts = useSelector((state) => state.userCartProducts.cartProducts);
+
     const dispatch = useDispatch()
     const id = sessionStorage.getItem("Id");
 
@@ -30,21 +31,21 @@ function Cart({ handleMoveToProducts }) {
     return (
         <>
             <div className='mx-auto max-w-7xl relative !h-[100%]'>
-                {Number(cartProducts?.length) > 0 ?
+                {Number(cartProducts[0]?.items?.length) > 0 ?
                     (<>
                         <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
                             <div className="flow-root">
                                 <ul role="list" className="-my-6 divide-y divide-gray-200">
-                                    {cartProducts && cartProducts.map((product) =>
-                                        <li key={product.CartID}>
+                                    {cartProducts[0]?.items && cartProducts[0]?.items?.map((product) =>
+                                        <li key={product.id}>
 
                                             <CartCard
-                                                ProductName={product.ProductName}
-                                                ThumbnailImage={product.ThumbnailImage}
-                                                Price={Number(product.Price)}
-                                                CartID={product.CartID}
+                                                ProductName={product?.product?.name}
+                                                ThumbnailImage={product?.product?.thumbnailImage}
+                                                Price={Number(product?.product?.price)}
+                                                CartID={product?.product?.cartID}
                                                 Discount={product.Discount}
-                                                Quantity={product.Quantity}
+                                                Quantity={product?.unit}
                                                 handleDeleteProductFromCart={handleDeleteProductFromCart}
                                                 handleIncQuantity={handleIncQuantity}
                                                 handleDecQuantity={handleDecQuantity}

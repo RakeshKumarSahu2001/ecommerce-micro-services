@@ -177,7 +177,6 @@ function Navbar() {
                 Sign up{" "}
               </Link>}
 
-
               {/* cart toggle button for desktop screen */}
               <a
                 href="#"

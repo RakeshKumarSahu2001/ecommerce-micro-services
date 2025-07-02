@@ -46,7 +46,6 @@ export default function ProductDetail() {
     const cartInfo = {
       id: id || "",
       quantity: 1,
-      AuthID: AuthID || "",
     };
     setIsLoading(true);
     await dispatch(addToCartApi(cartInfo));

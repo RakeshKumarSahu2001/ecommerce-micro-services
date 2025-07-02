@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import axiosInstance from "../../AxiosConfig";
 
 //fetch product from cart by userid
 export const fetchCartProductByUserId = createAsyncThunk("cart/fetchCartByUser", async (id) => {
 
     try {
-        const response=await axios.get(`/api/v1/users/fetch-all-cart-products/${id}`);
+        const response=await axiosInstance.get(`/shopping/v1/get-cart-product`);
+        console.log("response",response.data.data);
         return response.data.data;
     } catch (error) {
         throw error;

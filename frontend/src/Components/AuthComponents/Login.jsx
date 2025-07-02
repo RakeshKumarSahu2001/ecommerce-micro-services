@@ -47,7 +47,7 @@ function Login() {
           <div>
             <label
               htmlFor="email"
-              className="input input-bordered flex items-center gap-2"
+              className="input input-bordered flex items-center gap-2 w-full"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -85,7 +85,7 @@ function Login() {
           <div className="mt-2">
             <label
               htmlFor="password"
-              className="input input-bordered flex items-center gap-2"
+              className="input input-bordered flex items-center gap-2 w-full"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -118,16 +118,16 @@ function Login() {
             <button
               disabled={isSubmitting}
               type="submit"
-              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               {isSubmitting ? <span className="loading loading-infinity loading-lg"></span> : "Login"}
             </button>
           </div>
         </form>
 <br />
-        <div>
+        <div className='space-y-4'>
             <button
-              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               onClick={handleLoginWithGoogle}
             >
               Login With Google

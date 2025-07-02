@@ -8,7 +8,7 @@ export default async (app) => {
   const productServices = new ProductServices();
 
   //get all products
-  app.get("/v1/get-all-product", async (req, res, next) => {
+  app.get("/v1/get-all-product",auth, async (req, res, next) => {
     try {
       const products = await productServices.getAllProduct();
       res.status(200).json({
@@ -22,7 +22,7 @@ export default async (app) => {
   });
 
   //select specific product
-  app.get("/v1/get-product/:id", async (req, res, next) => {
+  app.get("/v1/get-product/:id",auth, async (req, res, next) => {
     try {
       const { id } = req.params;
       const product = await productServices.getProduct(id);
@@ -110,7 +110,7 @@ export default async (app) => {
   );
 
   //update specific product information
-  app.put("/v1/update-product/:id", async (req, res, next) => {
+  app.put("/v1/update-product/:id",auth, async (req, res, next) => {
     try {
       const { id } = req.params;
       const {
@@ -165,7 +165,7 @@ export default async (app) => {
   });
 
   //delete specific product
-  app.delete("/v1/delete-product/:id", async (req, res, next) => {
+  app.delete("/v1/delete-product/:id",auth, async (req, res, next) => {
     try {
       const { id } = req.params;
       const isDeleted = await productServices.deleteProduct(id);
@@ -180,7 +180,7 @@ export default async (app) => {
     }
   });
 
-  app.get("/v1/filter-props", async (req, res, next) => {
+  app.get("/v1/filter-props",auth, async (req, res, next) => {
     try {
       const brands = await productServices.getFilterProperties();
 
@@ -196,6 +196,7 @@ export default async (app) => {
 
   //check product is available or not for adding product into the cart
   subscribeToQueue("PRODUCT_AVAILABILITY_CHECK", async (data, msg, channel) => {
+    console.log("JSON.parse(data)",JSON.parse(data));
     const { productId, quantity } = JSON.parse(data);
     const productInfo = await productServices.getProduct(productId);
     const isProductAvailable =
