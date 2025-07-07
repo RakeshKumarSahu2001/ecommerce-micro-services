@@ -1,0 +1,7 @@
+version: "3.8"
+
+services:
+customer:
+images: ecommerce/customer
+ports:
+  -"8081:8081"
