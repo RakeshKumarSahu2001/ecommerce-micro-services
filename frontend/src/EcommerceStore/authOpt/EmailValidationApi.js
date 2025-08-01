@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-// import axios from "axios";
 import axiosInstance from "../../AxiosConfig.js";
 
 export const EmailValidation = createAsyncThunk("users/emailValidation", async (data) => {

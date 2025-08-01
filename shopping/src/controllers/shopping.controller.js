@@ -12,10 +12,9 @@ export default async (app) => {
         "PRODUCT_AVAILABILITY_CHECK",
         {productId,quantity}
       );
-      console.log("productAvailability,",productAvailability)
 
       const isInsertedToCart=await shoppingService.addToCart({...productAvailability,quantity,customerId:req.user?.id});
-console.log("isInsertedToCart",isInsertedToCart) 
+
       res.status(200).json({
         data:isInsertedToCart,
         success:true,

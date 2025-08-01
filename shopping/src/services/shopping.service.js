@@ -26,7 +26,7 @@ class ShoppingService {
   async fetchFromCart(id){
     try {
       if(!id){
-        throw new ApiError(401,
+        throw new ApiError(405,
           "User id is required to fetch the user cart information",
           "User id is required to fetch the user cart information"
         );
@@ -47,7 +47,7 @@ class ShoppingService {
     try {
       const {id,customerId}=userInput;
       if(!id || !customerId){
-        throw new ApiError(401,
+        throw new ApiError(405,
           "Information required to remove product from the cart...",
           "Information required to remove product from the cart..."
         )

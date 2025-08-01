@@ -70,7 +70,8 @@ export default function Product() {
   const handleDeleteProduct = async (id) => {
     await dispatch(DeleteSpecificProductApi(id));
   };
-
+  const loggedInUser=useSelector((state)=>state.loginSlice.loggedInUser);
+  console.log("loggedInUser :",loggedInUser);
   const products = useSelector((state) => state.products.allProducts);
 
   useEffect(() => {
@@ -101,14 +102,13 @@ export default function Product() {
         return prev.includes(value) ? [...prev] : [...prev, value];
       });
     }
-
   };
 
   const filteredProducts = useSelector(
     (state) => state.FetchProductByFilterSlice.allProducts
   );
   useEffect(() => {
-    if (filterBrand.length || filterCategory.length) {
+    if (filterBrand.length>0 || filterCategory.length>0) {
       const debounce = setTimeout(() => {
         dispatch(
           FetchProductByFilterApi({
@@ -123,7 +123,9 @@ export default function Product() {
   }, [filterBrand, filterCategory, dispatch]);
 
   useEffect(() => {
-    setProductList(filteredProducts);
+    if (filteredProducts && filteredProducts.length) {
+      setProductList(filteredProducts);
+    }
   }, [filteredProducts]);
 
   return (

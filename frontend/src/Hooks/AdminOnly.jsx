@@ -1,11 +1,7 @@
-import { ReactNode } from 'react';
 import IsAdmin from './isAdmin';
 
-type ChildrenType = {
-    children: ReactNode;
-};
 
-function AdminOnly({ children }: ChildrenType) {
+function AdminOnly({ children }) {
     const isAdminObj = new IsAdmin();
     
     return isAdminObj.access ? <>{children}</> : <div>Admin Only</div>;

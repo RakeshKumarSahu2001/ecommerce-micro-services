@@ -3,8 +3,9 @@ import ApiError from "../utils/ApiError.js";
 
 async function auth(req, res, next) {
   try {
+    const authToken=req.header("Authorization");
     const token =
-      req.cookies?.accessToken || req.header("Authorization").split(" ")[1];
+      req.cookies?.accessToken || (authToken&& authToken.split(" ")[1]);
 
     if (!token || token === "" || token === null) {
       throw new ApiError(

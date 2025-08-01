@@ -56,19 +56,27 @@ export default (app) => {
     try {
       const { email, password } = req.body;
 
-      const { accessToken, refreshToken } = await userService.login({
+      const { accessToken, refreshToken, data } = await userService.login({
         email,
         password,
       });
 
       res
-        .cookie("accessToken", accessToken)
-        .cookie("refreshToken", refreshToken)
+        .cookie("accessToken", accessToken, {
+          httpOnly: true,
+          secure: true,
+          maxAge: 1000 * 60 * 1,
+        })
+        .cookie("refreshToken", refreshToken, {
+          httpOnly: true,
+          secure: true,
+          maxAge: 1000 * 60 * 30,
+        })
         .status(200)
         .json({
           success: true,
           message: "User login successfully...",
-          data: [],
+          data: data,
         });
     } catch (error) {
       next(error);
@@ -82,8 +90,16 @@ export default (app) => {
       );
 
       res
-        .cookie("accessToken", accessToken)
-        .cookie("refreshToken", refreshToken)
+        .cookie("accessToken", accessToken, {
+          httpOnly: true,
+          secure: true,
+          maxAge: 1000 * 60 * 1,
+        })
+        .cookie("refreshToken", refreshToken, {
+          httpOnly: true,
+          secure: true,
+          maxAge: 1000 * 60 * 30,
+        })
         .status(200)
         .json({
           success: true,
@@ -98,8 +114,8 @@ export default (app) => {
   app.post("/v1/logout", auth, async (req, res, next) => {
     try {
       res
-        .clearCookie("accessToken")
-        .clearCookie("refreshToken")
+        .clearCookie("accessToken", { httpOnly: true, secure: true })
+        .clearCookie("refreshToken", { httpOnly: true, secure: true })
         .status(200)
         .json({
           success: true,
@@ -111,7 +127,44 @@ export default (app) => {
     }
   });
 
-  app.post("/v1/add-user-profile-info",auth, async (req, res, next) => {
+  //refreshtoken
+  app.post("/v1/refresh-token", async (req, res, next) => {
+    try {
+      console.log("*****************")
+      const refreshToken = req.cookies.refreshToken;
+      console.log("refreshToken :",refreshToken)
+      if (!refreshToken) {
+        return res.status(401).json({ message: "Refresh token missing" });
+      }
+
+      jwt.verify(refreshToken, process.env.REFRESHTOKEN_SECRETE, (err, user) => {
+        if (err)
+          return res.status(403).json({ message: "Invalid refresh token" });
+
+        const newAccessToken = jwt.sign(
+          { id: user.id },
+          process.env.ACCESSTOKEN_SECRETE,
+          {
+            expiresIn: "1m",
+          }
+        );
+
+        res.cookie("accessToken", newAccessToken, {
+          httpOnly: true,
+          secure: false,
+          maxAge: 1000 * 60 * 1,
+        });
+
+        res
+          .status(200)
+          .json({ success: true, message: "New access token generated" });
+      });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.post("/v1/add-user-profile-info", auth, async (req, res, next) => {
     try {
       const { id } = req.user;
       const addedInformation = await userService.addUserInfo({
@@ -131,7 +184,10 @@ export default (app) => {
   app.put("/v1/update-profile-info", auth, async (req, res, next) => {
     try {
       const { id } = req.user;
-      const updateUserInfo = await userService.updateUserInfo({...req.body,id});
+      const updateUserInfo = await userService.updateUserInfo({
+        ...req.body,
+        id,
+      });
 
       res.status(200).json({
         success: true,
@@ -143,32 +199,31 @@ export default (app) => {
     }
   });
 
-  app.get("/v1/all-users",auth,async(req,res,next)=>{
+  app.get("/v1/all-users", auth, async (req, res, next) => {
     try {
-      const allUsers=await userService.getAllUsers(req.user?.id);
+      const allUsers = await userService.getAllUsers(req.user?.id);
       res.status(200).json({
-        success:true,
-        message:"Users fetched successfully...",
-        data:allUsers
-      })
+        success: true,
+        message: "Users fetched successfully...",
+        data: allUsers,
+      });
     } catch (error) {
       next(error);
     }
-  })
+  });
 
-  app.get("/v1/user",auth,async(req,res,next)=>{
+  app.get("/v1/user", auth, async (req, res, next) => {
     try {
-      const user=await userService.getCustomer(req.user.id);
+      const user = await userService.getCustomer(req.user.id);
       res.status(200).json({
-        success:true,
-        message:"User information fetched successfully...",
-        data:user
-      })
-
+        success: true,
+        message: "User information fetched successfully...",
+        data: user,
+      });
     } catch (error) {
       next(error);
     }
-  })
+  });
 
   app.get("/v1/user-info", auth, async (req, res, next) => {
     try {
@@ -177,7 +232,6 @@ export default (app) => {
         throw new ApiError(404, "User not found...", "User not found...");
       }
 
-      console.log("user :", user);
       res.status(200).json({
         success: true,
         message: "user information fetched successfully...",
@@ -188,19 +242,19 @@ export default (app) => {
     }
   });
 
-  app.post("/v1/add-address",auth,async(req,res,next)=>{
+  app.post("/v1/add-address", auth, async (req, res, next) => {
     try {
-      const {id}=req.user
-      const addresses=await userService.addAddress({...req.body,id})
+      const { id } = req.user;
+      const addresses = await userService.addAddress({ ...req.body, id });
       res.status(200).json({
-        success:true,
-        message:"New address updated successfully...",
-        data:addresses
-      })
+        success: true,
+        message: "New address updated successfully...",
+        data: addresses,
+      });
     } catch (error) {
       next(error);
     }
-  })
+  });
 
   subscribeToQueue("new-product-added-into-user-cart", (data) => {
     console.log("aueue info", data);

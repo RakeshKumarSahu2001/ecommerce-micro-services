@@ -14,7 +14,7 @@ class customerServices {
       const isUserExist = await this.repository.findUser(email);
       if (isUserExist) {
         throw new ApiError(
-          401,
+          403,
           "User already exist...",
           "User already exist..."
         );
@@ -43,7 +43,7 @@ class customerServices {
 
       if (isUserExist) {
         throw new ApiError(
-          401,
+          403,
           "User already exist...",
           "User already exist..."
         );
@@ -67,7 +67,7 @@ class customerServices {
     try {
       if (!id || !otp) {
         throw new ApiError(
-          401,
+          403,
           "Id and OTP is required...",
           "Id and OTP is required..."
         );
@@ -132,7 +132,11 @@ class customerServices {
           isUserExist?.role
         );
 
-      return { accessToken, refreshToken };
+      return {
+        accessToken,
+        refreshToken,
+        data: { id: isUserExist?.id, email, role: isUserExist?.role },
+      };
     } catch (error) {
       throw new ApiError(500, "Login error..", error);
     }
@@ -144,7 +148,7 @@ class customerServices {
 
       if (!decoded?.email || !decoded?.uid) {
         throw new ApiError(
-          401,
+          403,
           "Credentials required...",
           "Credentials required..."
         );
@@ -173,15 +177,19 @@ class customerServices {
     }
   }
 
-  async getCustomer(id){
+  async getCustomer(id) {
     try {
-      if(!id){
-        throw new ApiError(401,"UserId is required...","UserId is required...");
+      if (!id) {
+        throw new ApiError(
+          403,
+          "UserId is required...",
+          "UserId is required..."
+        );
       }
-      const customer=await this.repository.findUserById(id);
+      const customer = await this.repository.findUserById(id);
       return customer;
     } catch (error) {
-      throw new ApiError(404,"User doesn't exist...","User doesn't exist...");
+      throw new ApiError(404, "User doesn't exist...", "User doesn't exist...");
     }
   }
 
@@ -212,7 +220,7 @@ class customerServices {
       return updatedInfo;
     } catch (error) {
       throw new ApiError(
-        401,
+        403,
         "Error occured while adding the user information...",
         "Error occured while adding the user information..."
       );
@@ -234,7 +242,7 @@ class customerServices {
       return updatedInfo;
     } catch (error) {
       throw new ApiError(
-        401,
+        403,
         "Error occured while updating the user information...",
         "Error occured while updating the user information..."
       );
@@ -243,7 +251,7 @@ class customerServices {
 
   async addAddress(userInput) {
     try {
-      const {id}=userInput;
+      const { id } = userInput;
       if (!id) {
         throw new ApiError(
           404,
@@ -252,12 +260,12 @@ class customerServices {
         );
       }
 
-      const addedAddress=await this.repository.addAddress(userInput);
+      const addedAddress = await this.repository.addAddress(userInput);
 
       return addedAddress;
     } catch (error) {
-            throw new ApiError(
-        401,
+      throw new ApiError(
+        403,
         "Error occured while adding new address information...",
         "Error occured while adding new address information..."
       );
@@ -269,7 +277,7 @@ class customerServices {
       const { addressId } = userInput;
       if (!addressId) {
         throw new ApiError(
-          401,
+          405,
           "Address id is required to update....",
           "Address id is required to update..."
         );
@@ -279,7 +287,7 @@ class customerServices {
       return updatedInfo;
     } catch (error) {
       throw new ApiError(
-        401,
+        405,
         "Error occured while updating the address...",
         "Error occured while updating the address..."
       );

@@ -146,9 +146,9 @@ class productCrudOperation {
         },
         data: {
           productName,
-          rating:new Prisma.Decimal(rating),
-          price:new Prisma.Decimal(price),
-          discount:new Prisma.Decimal(discount),
+          rating: new Prisma.Decimal(rating),
+          price: new Prisma.Decimal(price),
+          discount: new Prisma.Decimal(discount),
           stockQuantity,
           brand,
           category,
@@ -162,18 +162,43 @@ class productCrudOperation {
     }
   }
 
-  async getFilterProperties(){
+  async getFilterProperties() {
     try {
-      const brands=await prisma.goods.findMany({ distinct: ['brand',"category"],
+      const brands = await prisma.goods.findMany({
+        distinct: ["brand", "category"],
         select: {
           brand: true,
-          category:true,
-        }
+          category: true,
+        },
       });
 
       return brands;
     } catch (error) {
-      throw new ApiError(404,"Error occured during fetching all the brands",error);
+      throw new ApiError(
+        404,
+        "Error occured during fetching all the brands",
+        error
+      );
+    }
+  }
+
+  async getFilteredProduct(brand, category) {
+    try {
+    brand = Array.isArray(brand) ? brand : brand ? [brand] : [];
+    category = Array.isArray(category) ? category : category ? [category] : [];
+    const products = await prisma.goods.findMany({
+      where: {
+        OR: [{ brand: { in: brand } }, { category: { in: category } }],
+      },
+    });
+
+    return products;
+    } catch (error) {
+      throw new ApiError(
+        404,
+        "Error occured while fetching the proucts",
+        error
+      );
     }
   }
 }

@@ -10,15 +10,12 @@ export const loginApi = createAsyncThunk(
       const response = await axiosInstance.post(
         `/customer/v1/login`,
         data
-        //   , {
-        //   withCredentials: true,
-        // }
       );
 
       const userData = {
         id: response.data.data.id,
         email: response.data.data.email,
-        Role: response.data.data.Role,
+        Role: response.data.data.role,
       };
       if (response.data) {
         return userData;
@@ -26,7 +23,7 @@ export const loginApi = createAsyncThunk(
         return rejectWithValue("User doesn't exist");
       }
     } catch (err) {
-      throw err;
+      rejectWithValue(err);
     }
   }
 );
@@ -44,9 +41,6 @@ export const loginWithGoogle = createAsyncThunk(
       const response = await axiosInstance.post(
         "/customer/v1/login-with-google",
         token
-        // {
-        //   withCredentials: true,
-        // }
       );
       return response.data.data;
     } catch (error) {
@@ -57,7 +51,7 @@ export const loginWithGoogle = createAsyncThunk(
 
 export const logoutApi = createAsyncThunk("user/logoutUser", async () => {
   try {
-    await axiosInstance.post("/api/v1/users/logout");
+    await axiosInstance.post("/customer/v1/logout",null);
     return true;
   } catch (error) {
     throw error;

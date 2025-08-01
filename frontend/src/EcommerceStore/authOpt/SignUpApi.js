@@ -1,4 +1,3 @@
-// import axios from "axios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { app } from "../../firebase.js";

@@ -229,7 +229,7 @@ class userCrudOperation {
       return updatedInformation;
     } catch (error) {
       throw new ApiError(
-        401,
+        405,
         "Some error occured while adding user information...",
         "Some error occured while adding user information..."
       );
@@ -255,7 +255,7 @@ class userCrudOperation {
       return updatedInfo;
     } catch (error) {
       throw new ApiError(
-        401,
+        405,
         "Some error occured while updating user information...",
         "Some error occured while updating user information..."
       );
@@ -280,7 +280,7 @@ class userCrudOperation {
       return addresses;
     } catch (error) {
       throw new ApiError(
-        401,
+        405,
         "Some error occured while adding address information...",
         "Some error occured while adding address information..."
       );
@@ -306,7 +306,7 @@ class userCrudOperation {
       return updatedAddress;
     } catch (error) {
       throw new ApiError(
-        401,
+        405,
         "Some error occured while adding user information...",
         "Some error occured while adding user information..."
       );

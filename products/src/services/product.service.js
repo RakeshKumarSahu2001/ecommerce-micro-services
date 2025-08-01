@@ -28,11 +28,11 @@ class ProductServices {
 
   async getProduct(id) {
     try {
-      console.log("id :",id)
+      console.log("id :", id);
       const product = await this.repository.getProduct(id);
       return product;
     } catch (error) {
-      throw new ApiError(401, "Product id is not given...", error);
+      throw new ApiError(405, "Product id is not given...", error);
     }
   }
 
@@ -43,7 +43,7 @@ class ProductServices {
       return isDeleted;
     } catch (error) {
       throw new ApiError(
-        401,
+        405,
         "The id of the product is required to delete it...",
         error
       );
@@ -85,6 +85,19 @@ class ProductServices {
       return brands;
     } catch (error) {
       throw new ApiError();
+    }
+  }
+
+  async getFilteredProducts(brand, category) {
+    try {
+      const products = await this.repository.getFilteredProduct(
+        brand,
+        category
+      );
+
+      return products;
+    } catch (error) {
+      throw new ApiError(404, "Proucts filteration error", error);
     }
   }
 }

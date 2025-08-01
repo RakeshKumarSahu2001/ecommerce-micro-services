@@ -3,12 +3,13 @@ import ProductServices from "../services/product.service.js";
 import ApiError from "../utils/ApiError.js";
 import auth from "../middlewares/auth.middleware.js";
 import { subscribeToQueue } from "../services/rabbit.service.js";
+import prisma from "../database/Connection.js";
 
 export default async (app) => {
   const productServices = new ProductServices();
 
   //get all products
-  app.get("/v1/get-all-product",auth, async (req, res, next) => {
+  app.get("/v1/get-all-product", auth, async (req, res, next) => {
     try {
       const products = await productServices.getAllProduct();
       res.status(200).json({
@@ -21,8 +22,12 @@ export default async (app) => {
     }
   });
 
+  const logHello = (req, res, next) => {
+    console.log("****************** hello");
+    next();
+  };
   //select specific product
-  app.get("/v1/get-product/:id",auth, async (req, res, next) => {
+  app.get("/v1/get-product/:id", logHello, auth, async (req, res, next) => {
     try {
       const { id } = req.params;
       const product = await productServices.getProduct(id);
@@ -110,7 +115,7 @@ export default async (app) => {
   );
 
   //update specific product information
-  app.put("/v1/update-product/:id",auth, async (req, res, next) => {
+  app.put("/v1/update-product/:id", auth, async (req, res, next) => {
     try {
       const { id } = req.params;
       const {
@@ -165,7 +170,7 @@ export default async (app) => {
   });
 
   //delete specific product
-  app.delete("/v1/delete-product/:id",auth, async (req, res, next) => {
+  app.delete("/v1/delete-product/:id", auth, async (req, res, next) => {
     try {
       const { id } = req.params;
       const isDeleted = await productServices.deleteProduct(id);
@@ -180,7 +185,7 @@ export default async (app) => {
     }
   });
 
-  app.get("/v1/filter-props",auth, async (req, res, next) => {
+  app.get("/v1/filter-props", auth, async (req, res, next) => {
     try {
       const brands = await productServices.getFilterProperties();
 
@@ -194,9 +199,29 @@ export default async (app) => {
     }
   });
 
+  app.get("/v1/fetch-product-by-filter", async (req, res, next) => {
+    try {
+      const brand = req.query.Brand;
+      const category = req.query.Category;
+
+      const products = await productServices.getFilteredProducts(
+        brand,
+        category
+      );
+
+      res.status(200).json({
+        success: true,
+        message: "Brand information fetched successfully from the db...",
+        data: products,
+      });
+    } catch (error) {
+      next(error);
+    }
+  });
+
   //check product is available or not for adding product into the cart
   subscribeToQueue("PRODUCT_AVAILABILITY_CHECK", async (data, msg, channel) => {
-    console.log("JSON.parse(data)",JSON.parse(data));
+    console.log("JSON.parse(data)", JSON.parse(data));
     const { productId, quantity } = JSON.parse(data);
     const productInfo = await productServices.getProduct(productId);
     const isProductAvailable =

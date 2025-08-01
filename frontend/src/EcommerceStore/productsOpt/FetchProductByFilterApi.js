@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import axiosInstance from "../../AxiosConfig";
 
 export const FetchProductByFilterApi = createAsyncThunk(
     "products/fetchProductByFilter",
@@ -13,10 +13,8 @@ export const FetchProductByFilterApi = createAsyncThunk(
                 )
                 .join("&");
 
-            console.log(queryParams)
             // Make API request
-            const response = await axios.get(`/api/v1/users/product-filter?${queryParams}`);
-            console.log("response",response.data.data);
+            const response = await axiosInstance.get(`/v1/fetch-product-by-filter?${queryParams}`);
             return response.data.data;
         } catch (error) {
             console.error("Error fetching filtered products:", error);

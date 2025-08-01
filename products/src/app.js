@@ -17,10 +17,13 @@ export default async (app) => {
     })
   );
 
+
   product(app);
 
   app.use((err, req, res, next) => {
+    console.log(err)
     if (err instanceof ApiError) {
+      console.log("status code :",err.status)
       res.status(err.status).json({
         success: false,
         message: err.message,

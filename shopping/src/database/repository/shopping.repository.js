@@ -64,7 +64,7 @@ class ShoppingCrudOperation {
       return updatedCartItem;
     } catch (error) {
       throw new ApiError(
-        401,
+        405,
         "Error occured while inserting the product into the cart...",
         "Error occured while inserting the product into the cart..."
       );
